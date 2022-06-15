@@ -14,7 +14,15 @@
   <meta name="description" content="The best music on the net." />
 </svelte:head>
 
-<Layout title="Top Albums">
+<Layout>
+  <span slot="title">
+    Top Albums
+    <span
+      class="ml-3 rounded-md bg-gray-100 p-1 text-xl font-semibold dark:bg-gray-700 sm:text-2xl"
+    >
+      {favorites.length.toLocaleString()}
+    </span>
+  </span>
   <div
     class="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
   >

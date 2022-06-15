@@ -12,7 +12,8 @@
   <meta name="description" content="The best music on the net." />
 </svelte:head>
 
-<Layout title="New Releases">
+<Layout>
+  <span slot="title">New Releases</span>
   <div class="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
     {#each Object.entries(formatReleases(releases)).sort(sortByDate) as [date, data]}
       <div>
