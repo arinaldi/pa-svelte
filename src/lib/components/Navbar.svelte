@@ -1,8 +1,15 @@
 <script lang="ts">
-  import { ROUTES } from '$lib/constants';
-  import LinkWrapper from '$lib/LinkWrapper.svelte';
+  import { goto } from '$app/navigation';
+  import { page } from '$app/stores';
+
+  import { ROUTE_HREF, ROUTES, ROUTES_ADMIN } from '$lib/constants';
+  import LinkWrapper from '$lib/components/LinkWrapper.svelte';
+  import LoginIcon from '$lib/icons/LoginIcon.svelte';
+  import LogoutIcon from '$lib/icons/LogoutIcon.svelte';
   import MenuIcon from '$lib/icons/MenuIcon.svelte';
   import XIcon from '$lib/icons/XIcon.svelte';
+  import { user } from '$lib/sessionStore';
+  import { supabase } from '$lib/supabase';
 
   let open = false;
 
@@ -12,6 +19,14 @@
 
   function closeMenu() {
     open = false;
+  }
+
+  async function signOut() {
+    await supabase.auth.signOut();
+
+    if ($page.url.pathname.startsWith(ROUTES_ADMIN.base.href)) {
+      goto(ROUTE_HREF.TOP_ALBUMS);
+    }
   }
 </script>
 
@@ -46,6 +61,11 @@
                   {route.label}
                 </LinkWrapper>
               {/each}
+              {#if $user}
+                <LinkWrapper href={ROUTES_ADMIN.base.href}>
+                  {ROUTES_ADMIN.base.label}
+                </LinkWrapper>
+              {/if}
             </div>
           </div>
         </div>
@@ -53,7 +73,18 @@
         <div
           class="absolute inset-y-0 right-0 hidden pr-2 sm:static sm:inset-auto sm:ml-0 sm:flex sm:items-center sm:pr-0"
         >
-          <!-- Sign in/out -->
+          {#if $user}
+            <div
+              class="text-md cursor-pointer rounded-md px-3 py-2 font-medium text-gray-300 hover:bg-gray-700 hover:text-white dark:hover:bg-gray-800"
+              on:click={signOut}
+            >
+              <LogoutIcon className="h-5 w-5" />
+            </div>
+          {:else}
+            <LinkWrapper href={ROUTE_HREF.SIGNIN}>
+              <LoginIcon className="h-5 w-5" />
+            </LinkWrapper>
+          {/if}
         </div>
       </div>
     </div>
@@ -64,13 +95,40 @@
         {#each ROUTES as route (route.href)}
           <LinkWrapper
             classNames="block text-base"
+            {closeMenu}
             href={route.href}
-            onClick={closeMenu}
           >
             {route.label}
           </LinkWrapper>
         {/each}
-        <!-- Admin/Sign out | Sign in -->
+        {#if $user}
+          <span>
+            <LinkWrapper
+              classNames="block text-base"
+              {closeMenu}
+              href={ROUTES_ADMIN.base.href}
+            >
+              {ROUTES_ADMIN.base.label}
+            </LinkWrapper>
+            <div
+              class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+              on:click={() => {
+                closeMenu();
+                signOut();
+              }}
+            >
+              Sign Out
+            </div>
+          </span>
+        {:else}
+          <LinkWrapper
+            classNames="block text-base"
+            {closeMenu}
+            href={ROUTE_HREF.SIGNIN}
+          >
+            Sign In
+          </LinkWrapper>
+        {/if}
       </div>
     </div>
   </nav>
