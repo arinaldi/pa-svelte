@@ -2,8 +2,13 @@
   import EyeIcon from '$lib/icons/EyeIcon.svelte';
   import EyeOffIcon from '$lib/icons/EyeOffIcon.svelte';
 
+  export let value = '';
   export let wrapperClass = '';
   let showPassword = false;
+
+  function onInput({ target }: any) {
+    value = target?.value;
+  }
 
   function toggleShowPassword() {
     showPassword = !showPassword;
@@ -23,6 +28,7 @@
       autocomplete="password"
       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-black dark:bg-gray-700 dark:text-white sm:text-sm"
       id="password"
+      on:input={onInput}
       name="password"
       required
       type={showPassword ? 'text' : 'password'}
