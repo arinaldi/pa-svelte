@@ -1,10 +1,10 @@
-<script lang="ts">
-  import Layout from '$lib/components/Layout.svelte';
+<script context="module">
+  import { ROUTE_HREF } from '$lib/constants';
+
+  export async function load() {
+    return {
+      status: 302,
+      redirect: ROUTE_HREF.TOP_ALBUMS,
+    };
+  }
 </script>
-
-<svelte:head>
-  <title>Perfect Albums</title>
-  <meta name="description" content="The best music on the net." />
-</svelte:head>
-
-<Layout><span slot="title">Perfect Albums</span></Layout>
