@@ -27,5 +27,6 @@
     name={id}
     {required}
     {type}
+    {value}
   />
 </div>

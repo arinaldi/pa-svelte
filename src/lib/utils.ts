@@ -12,6 +12,21 @@ interface Results {
   [key: string]: ListItem[];
 }
 
+function addZeroPrefix(value: number) {
+  return value < 10 ? `0${value}` : value;
+}
+
+export function formatDate(isoString: string) {
+  if (!isoString) return '';
+
+  const date = new Date(isoString);
+  const year = date.getUTCFullYear();
+  const month = date.getUTCMonth() + 1;
+  const day = date.getUTCDate();
+
+  return `${year}-${addZeroPrefix(month)}-${addZeroPrefix(day)}`;
+}
+
 export function formatFavorites(favorites: Album[]): Results {
   const results: Results = {};
 

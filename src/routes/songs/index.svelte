@@ -9,14 +9,10 @@
   import TrashIcon from '$lib/icons/TrashIcon.svelte';
   import { user } from '$lib/sessionStore';
   import { supabase } from '$lib/supabase';
-  import type { Song } from '$lib/types';
+  import type { ModalType, Song } from '$lib/types';
 
-  interface Modal {
-    data: any;
-    type: MODAL_TYPES | null;
-  }
-
-  let modal: Modal = { data: null, type: null };
+  export let songs: Song[];
+  let modal: ModalType = { data: null, type: null };
   let artist = '';
   let title = '';
   let link = '';
@@ -45,6 +41,8 @@
   }
 
   async function onDelete() {
+    if (!modal.data) return;
+
     try {
       isSubmitting = true;
 
@@ -63,8 +61,6 @@
       isSubmitting = false;
     }
   }
-
-  export let songs: Song[];
 </script>
 
 <svelte:head>
@@ -152,7 +148,7 @@
         />
       </div>
     </Modal>
-  {:else if modal.type === MODAL_TYPES.DELETE}
+  {:else if modal.type === MODAL_TYPES.DELETE && modal.data}
     <Modal {isSubmitting} {onClose} onSubmit={onDelete}>
       <span slot="title">Delete Song</span>
       <div slot="body">
