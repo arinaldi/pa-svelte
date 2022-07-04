@@ -1,5 +1,8 @@
 <script lang="ts">
+  import { fade } from 'svelte/transition';
+
   import Spinner from '$lib/components/Spinner.svelte';
+  import XIcon from '$lib/icons/XIcon.svelte';
 
   export let isSubmitting = false;
   export let onClose: any = null;
@@ -7,10 +10,11 @@
 </script>
 
 <div
-  class="relative z-10"
   aria-labelledby="modal-title"
-  role="dialog"
   aria-modal="true"
+  class="relative z-10"
+  role="dialog"
+  transition:fade={{ duration: 150 }}
 >
   <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
   <div class="fixed z-10 inset-0 overflow-y-auto">
@@ -20,12 +24,20 @@
         on:submit|preventDefault={onSubmit}
       >
         <div class="mt-3 sm:mt-0 sm:text-left">
-          <h3
-            class="text-xl leading-6 font-medium text-gray-900"
-            id="modal-title"
-          >
-            <slot name="title" />
-          </h3>
+          <div class="flex justify-between items-center">
+            <h3
+              class="text-xl leading-6 font-medium text-gray-900"
+              id="modal-title"
+            >
+              <slot name="title" />
+            </h3>
+            <button
+              class="p-1 hover:bg-gray-100 rounded-full"
+              on:click={onClose}
+            >
+              <XIcon className="h-6 w-6" />
+            </button>
+          </div>
           <div class="mt-2">
             <slot name="body" />
           </div>
@@ -43,7 +55,7 @@
             {/if}
           </button>
           <button
-            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
+            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
             on:click={onClose}
             type="button"
           >

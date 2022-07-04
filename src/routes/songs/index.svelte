@@ -73,7 +73,7 @@
   <span slot="titleAction">
     {#if $user}
       <span
-        class="rounded-md px-1 py-1.5 hover:bg-gray-200"
+        class="rounded-md px-1 py-1.5 hover:bg-gray-100"
         on:click={() => {
           modal = { data: null, type: MODAL_TYPES.CREATE };
         }}
@@ -108,7 +108,7 @@
           </a>
           {#if $user}
             <span
-              class="ml-2 p-1 hover:bg-gray-200 rounded-md cursor-pointer dark:text-white"
+              class="ml-2 p-1 hover:bg-gray-100 rounded-md cursor-pointer dark:text-white"
               on:click={() => {
                 modal = { data: song, type: MODAL_TYPES.DELETE };
               }}

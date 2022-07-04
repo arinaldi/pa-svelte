@@ -111,7 +111,7 @@
   <span slot="titleAction">
     {#if $user}
       <span
-        class="rounded-md px-1 py-1.5 hover:bg-gray-200"
+        class="rounded-md px-1 py-1.5 hover:bg-gray-100"
         on:click={() => {
           modal = { data: null, type: MODAL_TYPES.CREATE };
         }}
@@ -132,7 +132,7 @@
               <span>{item.artist} &ndash; {item.title}</span>
               {#if $user}
                 <span
-                  class="ml-1 p-1 hover:bg-gray-200 rounded-md cursor-pointer dark:text-white"
+                  class="ml-1 p-1 hover:bg-gray-100 rounded-md cursor-pointer dark:text-white"
                   on:click={() => {
                     artist = item.artist;
                     title = item.title;
@@ -143,7 +143,7 @@
                   <PencilIcon className="inline h-4 w-4" />
                 </span>
                 <span
-                  class="p-1 hover:bg-gray-200 rounded-md cursor-pointer dark:text-white"
+                  class="p-1 hover:bg-gray-100 rounded-md cursor-pointer dark:text-white"
                   on:click={() => {
                     modal = { data: item, type: MODAL_TYPES.DELETE };
                   }}
