@@ -1,3 +1,8 @@
+export enum APP_MESSAGE_TYPES {
+  ERROR = 'error',
+  INFO = 'info',
+}
+
 export enum MESSAGES {
   ALBUM_PREFIX = 'Album successfully',
   SONG_PREFIX = 'Song successfully',
@@ -32,5 +37,11 @@ export const ROUTES_ADMIN = {
   edit: { href: '/admin/edit', label: 'Edit Album' },
   delete: { href: '/admin/delete', label: 'Delete Album' },
 };
+
+export enum SORT_DIRECTION {
+  ASC = 'asc',
+  DESC = 'desc',
+  NONE = '',
+}
 
 export const SPOTIFY_URL = 'https://open.spotify.com/search';
