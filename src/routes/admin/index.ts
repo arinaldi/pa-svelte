@@ -4,17 +4,17 @@ import type { RequestEvent } from '@sveltejs/kit';
 import type { RequestHandler } from './__types';
 
 import { SORT_DIRECTION } from '$lib/constants';
-import { parsePageQuery, parsePerPageQuery } from '$lib/utils';
+import { parsePageQuery, parsePerPageQuery, parseQuery } from '$lib/utils';
 
 const { ASC, DESC } = SORT_DIRECTION;
 
 export const get: RequestHandler = async ({ url }: RequestEvent) => {
   const page = parsePageQuery(url.searchParams.get('page'));
   const perPage = parsePerPageQuery(url.searchParams.get('perPage'));
-  const { artist, sort, studio, title } = {
+  const studio = parseQuery(url.searchParams.get('studio'));
+  const { artist, sort, title } = {
     artist: '',
     sort: '',
-    studio: '',
     title: '',
   };
   const [sortProp, desc] = sort.split(':') ?? [];

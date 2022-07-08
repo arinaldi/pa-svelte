@@ -3,6 +3,11 @@ export enum APP_MESSAGE_TYPES {
   INFO = 'info',
 }
 
+export enum FILTER {
+  OFF = 'Off',
+  ON = 'On',
+}
+
 export enum MESSAGES {
   ALBUM_PREFIX = 'Album successfully',
   SONG_PREFIX = 'Song successfully',

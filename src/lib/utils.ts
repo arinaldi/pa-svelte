@@ -102,6 +102,10 @@ export function parsePerPageQuery(value: string | null) {
   return SMALL;
 }
 
+export function parseQuery(value: string | null) {
+  return typeof value === 'string' ? value : '';
+}
+
 export function sortByDate(a: Tuple, b: Tuple): number {
   const dateA = a[0] === 'TBD' ? a[0] : new Date(a[0]).toISOString();
   const dateB = b[0] === 'TBD' ? b[0] : new Date(b[0]).toISOString();

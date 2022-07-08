@@ -7,6 +7,7 @@
   import Pagination from '$lib/components/Pagination.svelte';
   import PerPage from '$lib/components/PerPage.svelte';
   import SortableColumn from '$lib/components/SortableColumn.svelte';
+  import StudioFilter from '$lib/components/StudioFilter.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
   import { APP_MESSAGE_TYPES, ROUTES_ADMIN } from '$lib/constants';
   import CheckIcon from '$lib/icons/CheckIcon.svelte';
@@ -72,7 +73,7 @@
         <Button onClick={onClear}>Clear</Button>
       </div>
       <div class="inline sm:hidden">
-        <!-- <StudioFilter /> -->
+        <StudioFilter />
       </div>
     </div>
   </form>
@@ -83,7 +84,7 @@
     <PerPage />
     <div class="mx-2" />
     <div class="hidden sm:block">
-      <!-- <StudioFilter /> -->
+      <StudioFilter />
     </div>
   </div>
 
