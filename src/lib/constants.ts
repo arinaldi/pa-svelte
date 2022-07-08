@@ -25,6 +25,12 @@ export enum PAGE {
   PREVIOUS = 'Previous page',
 }
 
+export enum PER_PAGE {
+  SMALL = 25,
+  MEDIUM = 50,
+  LARGE = 100,
+}
+
 export enum ROUTE_HREF {
   TOP_ALBUMS = '/albums',
   FEATURED_SONGS = '/songs',

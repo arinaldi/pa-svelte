@@ -1,3 +1,4 @@
+import { PER_PAGE } from '$lib/constants';
 import type { Album, Release } from '$lib/types';
 
 export interface ListItem {
@@ -89,6 +90,16 @@ export function formatReleases(releases: Release[]): ReleaseResults {
 
 export function parsePageQuery(value: string | null) {
   return typeof value === 'string' ? parseInt(value) : 1;
+}
+
+export function parsePerPageQuery(value: string | null) {
+  const { SMALL, MEDIUM, LARGE } = PER_PAGE;
+  const perPage = typeof value === 'string' ? parseInt(value) : PER_PAGE.SMALL;
+
+  if (perPage === SMALL) return SMALL;
+  if (perPage === MEDIUM) return MEDIUM;
+  if (perPage === LARGE) return LARGE;
+  return SMALL;
 }
 
 export function sortByDate(a: Tuple, b: Tuple): number {

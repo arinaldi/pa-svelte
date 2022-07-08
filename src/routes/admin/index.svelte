@@ -1,22 +1,26 @@
 <script lang="ts">
+  import { page } from '$app/stores';
   import AppMessage from '$lib/components/AppMessage.svelte';
   import Button from '$lib/components/Button.svelte';
   import Column from '$lib/components/Column.svelte';
   import Layout from '$lib/components/Layout.svelte';
   import Pagination from '$lib/components/Pagination.svelte';
+  import PerPage from '$lib/components/PerPage.svelte';
   import SortableColumn from '$lib/components/SortableColumn.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
   import { APP_MESSAGE_TYPES, ROUTES_ADMIN } from '$lib/constants';
   import CheckIcon from '$lib/icons/CheckIcon.svelte';
   import PencilIcon from '$lib/icons/PencilIcon.svelte';
   import TrashIcon from '$lib/icons/TrashIcon.svelte';
+  import { parsePerPageQuery } from '$lib/utils';
+
   import type { Album } from '$lib/types';
 
   export let albums: Album[];
   export let total: number;
   let artist = '';
   let title = '';
-  let perPage = 25;
+  $: perPage = parsePerPageQuery($page.url.searchParams.get('perPage'));
 
   async function onSubmit() {
     console.log('submit');
@@ -76,7 +80,7 @@
   <div class="mb-4 flex justify-center">
     <Pagination lastPage={Math.ceil(total / perPage)} />
     <div class="mx-2" />
-    <!-- <PerPage /> -->
+    <PerPage />
     <div class="mx-2" />
     <div class="hidden sm:block">
       <!-- <StudioFilter /> -->
