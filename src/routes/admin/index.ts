@@ -1,15 +1,17 @@
 import { supabase } from '$lib/supabase';
 
-import { SORT_DIRECTION } from '$lib/constants';
-// import type { RequestEvent } from '@sveltejs/kit';
+import type { RequestEvent } from '@sveltejs/kit';
 import type { RequestHandler } from './__types';
+
+import { SORT_DIRECTION } from '$lib/constants';
+import { parsePageQuery } from '$lib/utils';
 
 const { ASC, DESC } = SORT_DIRECTION;
 
-export const get: RequestHandler = async () => {
-  const { artist, page, perPage, sort, studio, title } = {
+export const get: RequestHandler = async ({ url }: RequestEvent) => {
+  const page = parsePageQuery(url.searchParams.get('page'));
+  const { artist, perPage, sort, studio, title } = {
     artist: '',
-    page: 1,
     perPage: 25,
     sort: '',
     studio: '',

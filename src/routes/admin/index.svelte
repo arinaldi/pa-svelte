@@ -3,6 +3,7 @@
   import Button from '$lib/components/Button.svelte';
   import Column from '$lib/components/Column.svelte';
   import Layout from '$lib/components/Layout.svelte';
+  import Pagination from '$lib/components/Pagination.svelte';
   import SortableColumn from '$lib/components/SortableColumn.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
   import { APP_MESSAGE_TYPES, ROUTES_ADMIN } from '$lib/constants';
@@ -15,6 +16,7 @@
   export let total: number;
   let artist = '';
   let title = '';
+  let perPage = 25;
 
   async function onSubmit() {
     console.log('submit');
@@ -72,7 +74,7 @@
   </form>
 
   <div class="mb-4 flex justify-center">
-    <!-- <Pagination lastPage={Math.ceil(total / perPage)} /> -->
+    <Pagination lastPage={Math.ceil(total / perPage)} />
     <div class="mx-2" />
     <!-- <PerPage /> -->
     <div class="mx-2" />

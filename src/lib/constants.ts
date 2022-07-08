@@ -18,6 +18,13 @@ export enum MODAL_TYPES {
   DELETE = 'delete',
 }
 
+export enum PAGE {
+  FIRST = 'First page',
+  LAST = 'Last page',
+  NEXT = 'Next page',
+  PREVIOUS = 'Previous page',
+}
+
 export enum ROUTE_HREF {
   TOP_ALBUMS = '/albums',
   FEATURED_SONGS = '/songs',

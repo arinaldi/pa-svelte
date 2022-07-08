@@ -87,6 +87,10 @@ export function formatReleases(releases: Release[]): ReleaseResults {
   return results;
 }
 
+export function parsePageQuery(value: string | null) {
+  return typeof value === 'string' ? parseInt(value) : 1;
+}
+
 export function sortByDate(a: Tuple, b: Tuple): number {
   const dateA = a[0] === 'TBD' ? a[0] : new Date(a[0]).toISOString();
   const dateB = b[0] === 'TBD' ? b[0] : new Date(b[0]).toISOString();
