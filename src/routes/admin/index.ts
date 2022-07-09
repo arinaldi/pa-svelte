@@ -9,14 +9,12 @@ import { parsePageQuery, parsePerPageQuery, parseQuery } from '$lib/utils';
 const { ASC, DESC } = SORT_DIRECTION;
 
 export const get: RequestHandler = async ({ url }: RequestEvent) => {
+  const artist = parseQuery(url.searchParams.get('artist'));
   const page = parsePageQuery(url.searchParams.get('page'));
   const perPage = parsePerPageQuery(url.searchParams.get('perPage'));
   const sort = parseQuery(url.searchParams.get('sort'));
   const studio = parseQuery(url.searchParams.get('studio'));
-  const { artist, title } = {
-    artist: '',
-    title: '',
-  };
+  const title = parseQuery(url.searchParams.get('title'));
   const [sortProp, desc] = sort.split(':') ?? [];
   const direction = desc ? DESC : ASC;
   const start = (page - 1) * perPage;

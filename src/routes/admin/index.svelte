@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { goto } from '$app/navigation';
   import { page } from '$app/stores';
   import AppMessage from '$lib/components/AppMessage.svelte';
   import Button from '$lib/components/Button.svelte';
@@ -9,26 +10,43 @@
   import SortableColumn from '$lib/components/SortableColumn.svelte';
   import StudioFilter from '$lib/components/StudioFilter.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
-  import { APP_MESSAGE_TYPES, ROUTES_ADMIN } from '$lib/constants';
+  import { APP_MESSAGE_TYPES, PER_PAGE, ROUTES_ADMIN } from '$lib/constants';
   import CheckIcon from '$lib/icons/CheckIcon.svelte';
   import PencilIcon from '$lib/icons/PencilIcon.svelte';
   import TrashIcon from '$lib/icons/TrashIcon.svelte';
-  import { parsePerPageQuery } from '$lib/utils';
+  import { parsePerPageQuery, parseQuery } from '$lib/utils';
 
   import type { Album } from '$lib/types';
 
   export let albums: Album[];
   export let total: number;
-  let artist = '';
-  let title = '';
+
+  let artist = parseQuery($page.url.searchParams.get('artist'));
+  let title = parseQuery($page.url.searchParams.get('title'));
   $: perPage = parsePerPageQuery($page.url.searchParams.get('perPage'));
 
   async function onSubmit() {
-    console.log('submit');
+    const query = new URLSearchParams($page.url.searchParams.toString());
+
+    query.set('artist', artist);
+    query.set('page', '1');
+    query.set('sort', 'year');
+    query.set('title', title);
+    goto(`?${query.toString()}`);
   }
 
   function onClear() {
-    console.log('clear');
+    const query = new URLSearchParams($page.url.searchParams.toString());
+
+    artist = '';
+    title = '';
+    query.set('artist', '');
+    query.set('page', '1');
+    query.set('perPage', PER_PAGE.SMALL.toString());
+    query.set('sort', '');
+    query.set('studio', '');
+    query.set('title', '');
+    goto(`?${query.toString()}`);
   }
 </script>
 
