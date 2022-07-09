@@ -14,12 +14,6 @@ export interface AlbumInput {
 export interface Album extends AlbumInput, JSONObject {
   id: number;
   created_at: string;
-  // artist: string;
-  // title: string;
-  // year: string;
-  // cd: boolean;
-  // favorite: boolean;
-  // studio: boolean;
 }
 
 export interface Release extends JSONObject {
