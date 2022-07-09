@@ -1,7 +1,7 @@
 import { supabase } from '$lib/supabase';
 
+import type { RequestHandler } from '@sveltejs/kit';
 import type { Release } from '$lib/types';
-import type { RequestHandler } from './__types';
 
 export const get: RequestHandler = async () => {
   const { data: releases, error } = await supabase

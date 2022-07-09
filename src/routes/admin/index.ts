@@ -1,7 +1,6 @@
 import { supabase } from '$lib/supabase';
 
-import type { RequestEvent } from '@sveltejs/kit';
-import type { RequestHandler } from './__types';
+import type { RequestEvent, RequestHandler } from '@sveltejs/kit';
 
 import { SORT_DIRECTION } from '$lib/constants';
 import { parsePageQuery, parsePerPageQuery, parseQuery } from '$lib/utils';
@@ -56,13 +55,3 @@ export const get: RequestHandler = async ({ url }: RequestEvent) => {
     },
   };
 };
-
-/* interface Queries {
-  artist: string;
-  page: number;
-  perPage: PER_PAGE;
-  sort: string;
-  studio: string;
-  title: string;
-}
-*/

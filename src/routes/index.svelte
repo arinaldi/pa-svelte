@@ -1,4 +1,4 @@
-<script context="module">
+<script context="module" lang="ts">
   import { ROUTE_HREF } from '$lib/constants';
 
   export async function load() {

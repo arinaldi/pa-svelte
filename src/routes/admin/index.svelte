@@ -1,3 +1,21 @@
+<script context="module" lang="ts">
+  import type { LoadEvent } from '@sveltejs/kit';
+
+  import { supabase } from '$lib/supabase';
+  import { ROUTE_HREF } from '$lib/constants';
+
+  export async function load({ props }: LoadEvent) {
+    if (!supabase.auth.user()) {
+      return {
+        status: 302,
+        redirect: ROUTE_HREF.TOP_ALBUMS,
+      };
+    }
+
+    return { props };
+  }
+</script>
+
 <script lang="ts">
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
@@ -12,6 +30,7 @@
   import SubmitButton from '$lib/components/SubmitButton.svelte';
   import { APP_MESSAGE_TYPES, PER_PAGE, ROUTES_ADMIN } from '$lib/constants';
   import CheckIcon from '$lib/icons/CheckIcon.svelte';
+  import DocumentAddIcon from '$lib/icons/DocumentAddIcon.svelte';
   import PencilIcon from '$lib/icons/PencilIcon.svelte';
   import TrashIcon from '$lib/icons/TrashIcon.svelte';
   import { parsePerPageQuery, parseQuery } from '$lib/utils';
@@ -63,6 +82,16 @@
     >
       {total.toLocaleString()}
     </span>
+  </span>
+  <span slot="titleAction">
+    <a
+      class="rounded-md px-1 py-1.5 hover:bg-gray-200"
+      href={`${ROUTES_ADMIN.create.href}${$page.url.search}`}
+    >
+      <DocumentAddIcon
+        className="inline h-6 w-6 cursor-pointer dark:text-white"
+      />
+    </a>
   </span>
   <form
     class="mb-4 block sm:flex sm:items-center sm:justify-between"
@@ -182,7 +211,7 @@
                     >
                       <a
                         class="rounded-md px-1.5 py-1 hover:bg-gray-200"
-                        href={`${ROUTES_ADMIN.edit.href}/${album.id}`}
+                        href={`${ROUTES_ADMIN.edit.href}/${album.id}${$page.url.search}`}
                       >
                         <PencilIcon
                           className="inline h-4 w-4 cursor-pointer dark:text-white"
@@ -190,7 +219,7 @@
                       </a>
                       <a
                         class="ml-4 rounded-md px-1.5 py-1 hover:bg-gray-200"
-                        href={`${ROUTES_ADMIN.delete.href}/${album.id}`}
+                        href={`${ROUTES_ADMIN.delete.href}/${album.id}${$page.url.search}`}
                       >
                         <TrashIcon
                           className="inline h-4 w-4 cursor-pointer dark:text-white"
