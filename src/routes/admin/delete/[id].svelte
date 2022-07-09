@@ -5,6 +5,7 @@
   import Layout from '$lib/components/Layout.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
   import { ROUTES_ADMIN } from '$lib/constants';
+  import { supabase } from '$lib/supabase';
 
   import type { Album } from '$lib/types';
 

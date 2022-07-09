@@ -4,6 +4,7 @@
   import AlbumForm from '$lib/components/AlbumForm.svelte';
   import Layout from '$lib/components/Layout.svelte';
   import { ROUTES_ADMIN } from '$lib/constants';
+  import { supabase } from '$lib/supabase';
 
   import type { Album } from '$lib/types';
 
