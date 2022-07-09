@@ -11,10 +11,10 @@ const { ASC, DESC } = SORT_DIRECTION;
 export const get: RequestHandler = async ({ url }: RequestEvent) => {
   const page = parsePageQuery(url.searchParams.get('page'));
   const perPage = parsePerPageQuery(url.searchParams.get('perPage'));
+  const sort = parseQuery(url.searchParams.get('sort'));
   const studio = parseQuery(url.searchParams.get('studio'));
-  const { artist, sort, title } = {
+  const { artist, title } = {
     artist: '',
-    sort: '',
     title: '',
   };
   const [sortProp, desc] = sort.split(':') ?? [];
