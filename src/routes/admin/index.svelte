@@ -20,11 +20,15 @@
   import type { Album } from '$lib/types';
 
   export let albums: Album[];
+  export let cdTotal: number;
   export let total: number;
 
   let artist = parseQuery($page.url.searchParams.get('artist'));
   let title = parseQuery($page.url.searchParams.get('title'));
   $: perPage = parsePerPageQuery($page.url.searchParams.get('perPage'));
+
+  // @ts-ignore
+  const { version } = VERSION;
 
   async function onSubmit() {
     const query = new URLSearchParams($page.url.searchParams.toString());
@@ -66,6 +70,13 @@
     </span>
   </span>
   <span slot="titleAction">
+    <code class="mr-3">{version}</code>
+    <span
+      class="text-md mr-1 rounded-md bg-gray-100 px-1 font-semibold dark:bg-gray-700 sm:text-lg"
+    >
+      {cdTotal}
+    </span>
+    <span class="mr-3">CDs</span>
     <a
       class="rounded-md px-1 py-1.5 hover:bg-gray-200"
       href={`${ROUTES_ADMIN.create.href}${$page.url.search}`}

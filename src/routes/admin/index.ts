@@ -1,8 +1,8 @@
-import { supabase } from '$lib/supabase';
-
 import type { RequestEvent, RequestHandler } from '@sveltejs/kit';
+import type { Album } from '$lib/types';
 
 import { SORT_DIRECTION } from '$lib/constants';
+import { supabase } from '$lib/supabase';
 import { parsePageQuery, parsePerPageQuery, parseQuery } from '$lib/utils';
 
 const { ASC, DESC } = SORT_DIRECTION;
@@ -46,12 +46,28 @@ export const get: RequestHandler = async ({ url }: RequestEvent) => {
 
   const { data: albums, count, error } = await query;
 
-  if (error) throw error;
+  if (error) {
+    return {
+      body: { error },
+    };
+  }
+
+  const { count: cdCount, error: cdError } = await supabase
+    .from<Album>('albums')
+    .select('*', { count: 'exact', head: true })
+    .eq('cd', true);
+
+  if (cdError) {
+    return {
+      body: { error: cdError },
+    };
+  }
 
   return {
     body: {
-      albums: albums || [],
-      total: count || 0,
+      albums,
+      cdTotal: cdCount,
+      total: count,
     },
   };
 };
