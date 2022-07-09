@@ -1,21 +1,3 @@
-<script context="module" lang="ts">
-  import type { LoadEvent } from '@sveltejs/kit';
-
-  import { supabase } from '$lib/supabase';
-  import { ROUTE_HREF } from '$lib/constants';
-
-  export async function load({ props }: LoadEvent) {
-    if (!supabase.auth.user()) {
-      return {
-        status: 302,
-        redirect: ROUTE_HREF.TOP_ALBUMS,
-      };
-    }
-
-    return { props };
-  }
-</script>
-
 <script lang="ts">
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
