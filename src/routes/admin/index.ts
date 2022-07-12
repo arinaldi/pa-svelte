@@ -1,13 +1,13 @@
-import type { RequestEvent, RequestHandler } from '@sveltejs/kit';
-import type { Album } from '$lib/types';
+import { supabaseServerClient } from '@supabase/auth-helpers-sveltekit';
+import type { RequestHandler } from '@sveltejs/kit';
 
 import { SORT_DIRECTION } from '$lib/constants';
-import { supabase } from '$lib/supabase';
 import { parsePageQuery, parsePerPageQuery, parseQuery } from '$lib/utils';
+import type { Album } from '$lib/types';
 
 const { ASC, DESC } = SORT_DIRECTION;
 
-export const get: RequestHandler = async ({ url }: RequestEvent) => {
+export const get: RequestHandler = async ({ request, url }) => {
   const artist = parseQuery(url.searchParams.get('artist'));
   const page = parsePageQuery(url.searchParams.get('page'));
   const perPage = parsePerPageQuery(url.searchParams.get('perPage'));
@@ -19,7 +19,7 @@ export const get: RequestHandler = async ({ url }: RequestEvent) => {
   const start = (page - 1) * perPage;
   const end = page * perPage - 1;
 
-  let query = supabase
+  let query = supabaseServerClient(request)
     .from('albums')
     .select('*', { count: 'exact' })
     .ilike('artist', `%${artist}%`)
@@ -52,7 +52,7 @@ export const get: RequestHandler = async ({ url }: RequestEvent) => {
     };
   }
 
-  const { count: cdCount, error: cdError } = await supabase
+  const { count: cdCount, error: cdError } = await supabaseServerClient(request)
     .from<Album>('albums')
     .select('*', { count: 'exact', head: true })
     .eq('cd', true);
@@ -69,5 +69,61 @@ export const get: RequestHandler = async ({ url }: RequestEvent) => {
       cdTotal: cdCount,
       total: count,
     },
+  };
+};
+
+export const post: RequestHandler = async ({ request, url }) => {
+  const formData = await request.formData();
+  const artist = formData.get('artist');
+  const title = formData.get('title');
+  const year = formData.get('year');
+  const cd = formData.get('cd');
+  const favorite = formData.get('favorite');
+  const studio = formData.get('studio');
+
+  if (typeof artist !== 'string' || artist.length === 0) {
+    return {
+      body: { errors: { artist: 'Artist is required' } },
+      status: 400,
+    };
+  }
+
+  if (typeof title !== 'string' || title.length === 0) {
+    return {
+      body: { errors: { title: 'Title is required' } },
+      status: 400,
+    };
+  }
+
+  if (typeof year !== 'string' || year.length === 0) {
+    return {
+      body: { errors: { year: 'Year is invalid' } },
+      status: 400,
+    };
+  }
+
+  const { error } = await supabaseServerClient(request)
+    .from<Album>('albums')
+    .insert([
+      {
+        artist,
+        title,
+        year,
+        cd: cd === 'on',
+        favorite: favorite === 'on',
+        studio: studio === 'on',
+      },
+    ]);
+
+  if (error) {
+    return {
+      body: { error },
+      status: 500,
+    };
+  }
+
+  return {
+    headers: { location: url.href },
+    status: 303,
   };
 };

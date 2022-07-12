@@ -27,9 +27,6 @@
   let title = parseQuery($page.url.searchParams.get('title'));
   $: perPage = parsePerPageQuery($page.url.searchParams.get('perPage'));
 
-  // @ts-ignore
-  const { version } = VERSION;
-
   async function onSubmit() {
     const query = new URLSearchParams($page.url.searchParams.toString());
 
@@ -70,7 +67,7 @@
     </span>
   </span>
   <span slot="titleAction">
-    <code class="mr-3">{version}</code>
+    <code class="mr-3">{`fix_me`}</code>
     <span
       class="text-md mr-1 rounded-md bg-gray-100 px-1 font-semibold dark:bg-gray-700 sm:text-lg"
     >

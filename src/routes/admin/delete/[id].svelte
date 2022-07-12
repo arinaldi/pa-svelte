@@ -5,34 +5,13 @@
   import Layout from '$lib/components/Layout.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
   import { ROUTES_ADMIN } from '$lib/constants';
-  import { supabase } from '$lib/supabase';
 
   import type { Album } from '$lib/types';
 
   export let album: Album;
-  let isSubmitting = false;
 
   function onCancel() {
     goto(`${ROUTES_ADMIN.base.href}${$page.url.search}`);
-  }
-
-  async function onSubmit() {
-    try {
-      isSubmitting = true;
-
-      const { error } = await supabase
-        .from<Album>('albums')
-        .delete()
-        .eq('id', album.id);
-
-      if (error) throw error;
-
-      goto(`${ROUTES_ADMIN.base.href}${$page.url.search}`);
-    } catch (error: any) {
-      alert(error.error_description || error.message);
-    } finally {
-      isSubmitting = false;
-    }
   }
 </script>
 
@@ -50,12 +29,13 @@
       Are you sure you want to delete {album.artist} – {album.title}?
     </div>
     <form
+      action={`/admin/delete/${album.id}${$page.url.search}&_method=delete`}
       class="flex items-center justify-end p-6"
-      on:submit|preventDefault={onSubmit}
+      method="post"
     >
       <CancelButton onClick={onCancel} />
       <span class="ml-1" />
-      <SubmitButton {isSubmitting} />
+      <SubmitButton />
     </form>
   </div>
 </Layout>
