@@ -4,9 +4,9 @@
   import Spinner from '$lib/components/Spinner.svelte';
   import XIcon from '$lib/icons/XIcon.svelte';
 
+  export let action = '';
   export let isSubmitting = false;
   export let onClose: any = null;
-  export let onSubmit: any = null;
 </script>
 
 <div
@@ -20,8 +20,9 @@
   <div class="fixed z-10 inset-0 overflow-y-auto">
     <div class="flex justify-center items-start min-h-full p-4 sm:p-0">
       <form
+        {action}
         class="relative bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all my-8 max-w-lg w-full sm:p-6"
-        on:submit|preventDefault={onSubmit}
+        method="post"
       >
         <div class="mt-3 sm:mt-0 sm:text-left">
           <div class="flex justify-between items-center">

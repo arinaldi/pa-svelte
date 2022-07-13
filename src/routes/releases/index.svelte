@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { invalidate } from '$app/navigation';
+  import { session } from '$app/stores';
 
   import Input from '$lib/components/Input.svelte';
   import Layout from '$lib/components/Layout.svelte';
@@ -8,8 +8,6 @@
   import DocumentAddIcon from '$lib/icons/DocumentAddIcon.svelte';
   import PencilIcon from '$lib/icons/PencilIcon.svelte';
   import TrashIcon from '$lib/icons/TrashIcon.svelte';
-  import { user } from '$lib/sessionStore';
-  import { supabase } from '$lib/supabase';
   import { formatDate, formatReleases, sortByDate } from '$lib/utils';
   import type { ModalType, Release } from '$lib/types';
 
@@ -18,86 +16,12 @@
   let artist = '';
   let title = '';
   let date = '';
-  let isSubmitting = false;
 
   function onClose() {
     artist = '';
     title = '';
     date = '';
     modal = { data: null, type: null };
-  }
-
-  async function onCreate() {
-    try {
-      isSubmitting = true;
-
-      const input = {
-        artist,
-        title,
-        date: typeof date === 'string' && date.length ? date : null,
-      };
-      const { error } = await supabase
-        .from<Release>('releases')
-        .insert([input]);
-
-      if (error) throw error;
-
-      invalidate('/releases');
-      onClose();
-    } catch (error: any) {
-      alert(error.error_description || error.message);
-    } finally {
-      isSubmitting = false;
-    }
-  }
-
-  async function onEdit() {
-    if (!modal.data) return;
-
-    try {
-      isSubmitting = true;
-
-      const input = {
-        artist,
-        title,
-        date: typeof date === 'string' && date.length ? date : null,
-      };
-      const { error } = await supabase
-        .from<Release>('releases')
-        .update(input)
-        .eq('id', modal.data.id);
-
-      if (error) throw error;
-
-      invalidate('/releases');
-      onClose();
-    } catch (error: any) {
-      alert(error.error_description || error.message);
-    } finally {
-      isSubmitting = false;
-    }
-  }
-
-  async function onDelete() {
-    if (!modal.data) return;
-
-    try {
-      isSubmitting = true;
-
-      const { error } = await supabase
-        .from<Release>('releases')
-        .delete()
-        .eq('id', modal.data.id);
-
-      if (error) throw error;
-
-      invalidate('/releases');
-      onClose();
-    } catch (error: any) {
-      alert(error.error_description || error.message);
-    } finally {
-      isSubmitting = false;
-    }
   }
 </script>
 
@@ -109,7 +33,7 @@
 <Layout>
   <span slot="title">New Releases</span>
   <span slot="titleAction">
-    {#if $user}
+    {#if $session.user}
       <span
         class="rounded-md px-1 py-1.5 hover:bg-gray-100"
         on:click={() => {
@@ -130,7 +54,7 @@
           {#each items as item (item.id)}
             <li class="dark:text-white">
               <span>{item.artist} &ndash; {item.title}</span>
-              {#if $user}
+              {#if $session.user}
                 <span
                   class="ml-1 p-1 hover:bg-gray-100 rounded-md cursor-pointer dark:text-white"
                   on:click={() => {
@@ -159,7 +83,7 @@
   </div>
 
   {#if modal.type === MODAL_TYPES.CREATE}
-    <Modal {isSubmitting} {onClose} onSubmit={onCreate}>
+    <Modal {onClose}>
       <span slot="title">Create Release</span>
       <div class="w-full" slot="body">
         <Input
@@ -180,9 +104,10 @@
       </div>
     </Modal>
   {:else if modal.type === MODAL_TYPES.EDIT && modal.data}
-    <Modal {isSubmitting} {onClose} onSubmit={onEdit}>
+    <Modal action="/releases?_method=put" {onClose}>
       <span slot="title">Edit Release</span>
       <div class="w-full" slot="body">
+        <input name="id" type="hidden" value={modal.data.id} />
         <Input
           bind:value={artist}
           id="artist"
@@ -201,9 +126,10 @@
       </div>
     </Modal>
   {:else if modal.type === MODAL_TYPES.DELETE && modal.data}
-    <Modal {isSubmitting} {onClose} onSubmit={onDelete}>
+    <Modal action="/releases?_method=delete" {onClose}>
       <span slot="title">Delete Release</span>
       <div slot="body">
+        <input name="id" type="hidden" value={modal.data.id} />
         Are you sure you want to delete {modal.data.artist} &ndash; {modal.data
           .title}?
       </div>

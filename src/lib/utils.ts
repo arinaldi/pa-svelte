@@ -88,6 +88,10 @@ export function formatReleases(releases: Release[]): ReleaseResults {
   return results;
 }
 
+export function isEmailValid(email: unknown) {
+  return typeof email === 'string' && email.length > 3 && email.includes('@');
+}
+
 export function parsePageQuery(value: string | null) {
   return typeof value === 'string' ? parseInt(value) : 1;
 }

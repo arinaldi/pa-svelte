@@ -3,13 +3,16 @@
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
 declare namespace App {
-	interface Locals {
-		userid: string;
-	}
+  interface UserSession {
+    user: import('@supabase/supabase-js').User;
+    accessToken?: string;
+  }
 
-	// interface Platform {}
+  interface Locals extends UserSession {
+    error: import('@supabase/supabase-js').ApiError;
+  }
 
-	// interface Session {}
-
-	// interface Stuff {}
+  interface Session extends UserSession {
+    accessToken?: string;
+  }
 }

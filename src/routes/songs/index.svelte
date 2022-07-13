@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { invalidate } from '$app/navigation';
+  import { session } from '$app/stores';
 
   import Input from '$lib/components/Input.svelte';
   import Layout from '$lib/components/Layout.svelte';
@@ -7,8 +7,7 @@
   import { MODAL_TYPES } from '$lib/constants';
   import DocumentAddIcon from '$lib/icons/DocumentAddIcon.svelte';
   import TrashIcon from '$lib/icons/TrashIcon.svelte';
-  import { user } from '$lib/sessionStore';
-  import { supabase } from '$lib/supabase';
+
   import type { ModalType, Song } from '$lib/types';
 
   export let songs: Song[];
@@ -16,50 +15,9 @@
   let artist = '';
   let title = '';
   let link = '';
-  let isSubmitting = false;
 
   function onClose() {
     modal = { data: null, type: null };
-  }
-
-  async function onCreate() {
-    try {
-      isSubmitting = true;
-
-      const input = { artist, title, link };
-      const { error } = await supabase.from<Song>('songs').insert([input]);
-
-      if (error) throw error;
-
-      invalidate('/songs');
-      onClose();
-    } catch (error: any) {
-      alert(error.error_description || error.message);
-    } finally {
-      isSubmitting = false;
-    }
-  }
-
-  async function onDelete() {
-    if (!modal.data) return;
-
-    try {
-      isSubmitting = true;
-
-      const { error } = await supabase
-        .from<Song>('songs')
-        .delete()
-        .eq('id', modal.data.id);
-
-      if (error) throw error;
-
-      invalidate('/songs');
-      onClose();
-    } catch (error: any) {
-      alert(error.error_description || error.message);
-    } finally {
-      isSubmitting = false;
-    }
   }
 </script>
 
@@ -71,7 +29,7 @@
 <Layout>
   <span slot="title">Featured Songs</span>
   <span slot="titleAction">
-    {#if $user}
+    {#if $session.user}
       <span
         class="rounded-md px-1 py-1.5 hover:bg-gray-100"
         on:click={() => {
@@ -106,7 +64,7 @@
           >
             Listen
           </a>
-          {#if $user}
+          {#if $session.user}
             <span
               class="ml-2 p-1 hover:bg-gray-100 rounded-md cursor-pointer dark:text-white"
               on:click={() => {
@@ -122,7 +80,7 @@
   </div>
 
   {#if modal.type === MODAL_TYPES.CREATE}
-    <Modal {isSubmitting} {onClose} onSubmit={onCreate}>
+    <Modal {onClose}>
       <span slot="title">Create Song</span>
       <div class="w-full" slot="body">
         <Input
@@ -149,9 +107,10 @@
       </div>
     </Modal>
   {:else if modal.type === MODAL_TYPES.DELETE && modal.data}
-    <Modal {isSubmitting} {onClose} onSubmit={onDelete}>
+    <Modal action="/songs?_method=delete" {onClose}>
       <span slot="title">Delete Song</span>
       <div slot="body">
+        <input name="id" type="hidden" value={modal.data.id} />
         Are you sure you want to delete {modal.data.artist} &ndash; {modal.data
           .title}?
       </div>

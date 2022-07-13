@@ -9,16 +9,15 @@
 
   import type { AlbumInput } from '$lib/types';
 
+  export let action = '';
   export let album: AlbumInput;
-  export let isSubmitting: boolean;
-  export let onSubmit: any = null;
 
   function onCancel() {
     goto(`${ROUTES_ADMIN.base.href}${$page.url.search}`);
   }
 </script>
 
-<form on:submit|preventDefault={onSubmit}>
+<form {action} method="post">
   <div class="bg-white p-6 dark:bg-gray-800">
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
       <Input
@@ -65,6 +64,6 @@
   <div class="flex items-center justify-end p-6">
     <CancelButton onClick={onCancel} />
     <span class="ml-1" />
-    <SubmitButton {isSubmitting} />
+    <SubmitButton />
   </div>
 </form>

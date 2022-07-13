@@ -1,15 +1,11 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
-  import { page } from '$app/stores';
-
+  import { session } from '$app/stores';
   import { ROUTE_HREF, ROUTES, ROUTES_ADMIN } from '$lib/constants';
   import LinkWrapper from '$lib/components/LinkWrapper.svelte';
   import LoginIcon from '$lib/icons/LoginIcon.svelte';
   import LogoutIcon from '$lib/icons/LogoutIcon.svelte';
   import MenuIcon from '$lib/icons/MenuIcon.svelte';
   import XIcon from '$lib/icons/XIcon.svelte';
-  import { user } from '$lib/sessionStore';
-  import { supabase } from '$lib/supabase';
 
   let open = false;
 
@@ -19,14 +15,6 @@
 
   function closeMenu() {
     open = false;
-  }
-
-  async function signOut() {
-    await supabase.auth.signOut();
-
-    if ($page.url.pathname.startsWith(ROUTES_ADMIN.base.href)) {
-      goto(ROUTE_HREF.TOP_ALBUMS);
-    }
   }
 </script>
 
@@ -61,7 +49,7 @@
                   {route.label}
                 </LinkWrapper>
               {/each}
-              {#if $user}
+              {#if $session.user}
                 <LinkWrapper href={ROUTES_ADMIN.base.href}>
                   {ROUTES_ADMIN.base.label}
                 </LinkWrapper>
@@ -73,13 +61,13 @@
         <div
           class="absolute inset-y-0 right-0 hidden pr-2 sm:static sm:inset-auto sm:ml-0 sm:flex sm:items-center sm:pr-0"
         >
-          {#if $user}
-            <div
+          {#if $session.user}
+            <a
               class="text-md cursor-pointer rounded-md px-3 py-2 font-medium text-gray-300 hover:bg-gray-700 hover:text-white dark:hover:bg-gray-800"
-              on:click={signOut}
+              href="/api/auth/logout"
             >
               <LogoutIcon className="h-5 w-5" />
-            </div>
+            </a>
           {:else}
             <LinkWrapper href={ROUTE_HREF.SIGNIN}>
               <LoginIcon className="h-5 w-5" />
@@ -101,7 +89,7 @@
             {route.label}
           </LinkWrapper>
         {/each}
-        {#if $user}
+        {#if $session.user}
           <span>
             <LinkWrapper
               classNames="block text-base"
@@ -110,15 +98,15 @@
             >
               {ROUTES_ADMIN.base.label}
             </LinkWrapper>
-            <div
+            <a
               class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+              href="/api/auth/logout"
               on:click={() => {
                 closeMenu();
-                signOut();
               }}
             >
               Sign Out
-            </div>
+            </a>
           </span>
         {:else}
           <LinkWrapper

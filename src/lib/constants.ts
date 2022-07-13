@@ -3,6 +3,8 @@ export enum APP_MESSAGE_TYPES {
   INFO = 'info',
 }
 
+export const APP_URL = 'https://pa-svelte.vercel.app';
+
 export enum FILTER {
   OFF = 'Off',
   ON = 'On',
