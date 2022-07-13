@@ -19,6 +19,7 @@
 
   import type { Album } from '$lib/types';
 
+  export let appVersion: string;
   export let albums: Album[];
   export let cdTotal: number;
   export let total: number;
@@ -67,7 +68,7 @@
     </span>
   </span>
   <span slot="titleAction">
-    <code class="mr-3">{`fix_me`}</code>
+    <code class="mr-3">{appVersion}</code>
     <span
       class="text-md mr-1 rounded-md bg-gray-100 px-1 font-semibold dark:bg-gray-700 sm:text-lg"
     >

@@ -65,6 +65,7 @@ export const get: RequestHandler = async ({ request, url }) => {
 
   return {
     body: {
+      appVersion: process.env.npm_package_version ?? '',
       albums,
       cdTotal: cdCount,
       total: count,
