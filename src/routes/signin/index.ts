@@ -71,7 +71,6 @@ export const post: RequestHandler = async ({ request, url }) => {
           'content-type': 'application/json',
         }),
         method: 'POST',
-        mode: 'cors',
       });
 
       const cookies = res.headers.get('set-cookie');
