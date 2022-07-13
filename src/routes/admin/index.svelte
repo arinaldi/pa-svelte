@@ -19,7 +19,6 @@
 
   import type { Album } from '$lib/types';
 
-  export let appVersion: string;
   export let albums: Album[];
   export let cdTotal: number;
   export let total: number;
@@ -27,6 +26,9 @@
   let artist = parseQuery($page.url.searchParams.get('artist'));
   let title = parseQuery($page.url.searchParams.get('title'));
   $: perPage = parsePerPageQuery($page.url.searchParams.get('perPage'));
+
+  // @ts-ignore
+  const { version } = APP_VERSION;
 
   async function onSubmit() {
     const query = new URLSearchParams($page.url.searchParams.toString());
@@ -68,7 +70,7 @@
     </span>
   </span>
   <span slot="titleAction">
-    <code class="mr-3">{appVersion}</code>
+    <code class="mr-3">{version}</code>
     <span
       class="text-md mr-1 rounded-md bg-gray-100 px-1 font-semibold dark:bg-gray-700 sm:text-lg"
     >
