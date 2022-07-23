@@ -5,6 +5,8 @@
   import LoginIcon from '$lib/icons/LoginIcon.svelte';
   import LogoutIcon from '$lib/icons/LogoutIcon.svelte';
   import MenuIcon from '$lib/icons/MenuIcon.svelte';
+  import MoonIcon from '$lib/icons/MoonIcon.svelte';
+  import SunIcon from '$lib/icons/SunIcon.svelte';
   import XIcon from '$lib/icons/XIcon.svelte';
 
   let open = false;
@@ -15,6 +17,19 @@
 
   function closeMenu() {
     open = false;
+  }
+
+  function toggleDarkMode() {
+    const root = window.document.documentElement;
+    const isDarkMode = root.classList.contains('dark');
+
+    if (isDarkMode) {
+      root.classList.remove('dark');
+      localStorage.theme = 'light';
+    } else {
+      root.classList.add('dark');
+      localStorage.theme = 'dark';
+    }
   }
 </script>
 
@@ -57,7 +72,17 @@
             </div>
           </div>
         </div>
-        <!-- Dark mode button -->
+        <button
+          aria-expanded="false"
+          class="rounded-md p-2 text-gray-300 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+          on:click={toggleDarkMode}
+          type="button"
+        >
+          <span class="sr-only">Toggle dark mode</span>
+          <SunIcon className="h-5 w-5 hidden dark:block" />
+          <MoonIcon className="h-5 w-5 dark:hidden" />
+        </button>
+
         <div
           class="absolute inset-y-0 right-0 hidden pr-2 sm:static sm:inset-auto sm:ml-0 sm:flex sm:items-center sm:pr-0"
         >
