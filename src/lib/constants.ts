@@ -65,3 +65,8 @@ export enum SORT_DIRECTION {
 }
 
 export const SPOTIFY_URL = 'https://open.spotify.com/search';
+
+export enum THEME {
+  DARK = 'dark',
+  LIGHT = 'light',
+}

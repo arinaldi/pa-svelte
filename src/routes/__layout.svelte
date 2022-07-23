@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import { SupaAuthHelper } from '@supabase/auth-helpers-svelte';
   import nProgress from 'nprogress';
 
@@ -18,20 +17,23 @@
       nProgress.done();
     }
   }
+</script>
 
-  onMount(() => {
+<svelte:head>
+  <script lang="ts">
+    const dark = 'dark';
     const root = window.document.documentElement;
     const prefersDark =
       !('theme' in localStorage) &&
       window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-    if (localStorage.theme === 'dark' || prefersDark) {
-      root.classList.add('dark');
+    if (localStorage.theme === dark || prefersDark) {
+      root.classList.add(dark);
     } else {
-      root.classList.remove('dark');
+      root.classList.remove(dark);
     }
-  });
-</script>
+  </script>
+</svelte:head>
 
 <SupaAuthHelper {supabaseClient} {session}>
   <Navbar />

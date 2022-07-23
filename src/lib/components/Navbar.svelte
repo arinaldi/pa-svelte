@@ -1,6 +1,6 @@
 <script lang="ts">
   import { session } from '$app/stores';
-  import { ROUTE_HREF, ROUTES, ROUTES_ADMIN } from '$lib/constants';
+  import { ROUTE_HREF, ROUTES, ROUTES_ADMIN, THEME } from '$lib/constants';
   import LinkWrapper from '$lib/components/LinkWrapper.svelte';
   import LoginIcon from '$lib/icons/LoginIcon.svelte';
   import LogoutIcon from '$lib/icons/LogoutIcon.svelte';
@@ -10,6 +10,7 @@
   import XIcon from '$lib/icons/XIcon.svelte';
 
   let open = false;
+  const { DARK, LIGHT } = THEME;
 
   function toggleMenu() {
     open = !open;
@@ -21,14 +22,14 @@
 
   function toggleDarkMode() {
     const root = window.document.documentElement;
-    const isDarkMode = root.classList.contains('dark');
+    const isDarkMode = root.classList.contains(DARK);
 
     if (isDarkMode) {
-      root.classList.remove('dark');
-      localStorage.theme = 'light';
+      root.classList.remove(DARK);
+      localStorage.theme = LIGHT;
     } else {
-      root.classList.add('dark');
-      localStorage.theme = 'dark';
+      root.classList.add(DARK);
+      localStorage.theme = DARK;
     }
   }
 </script>
