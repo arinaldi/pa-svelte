@@ -69,7 +69,7 @@
       {total.toLocaleString()}
     </span>
   </span>
-  <span slot="titleAction">
+  <span class="dark:text-white" slot="titleAction">
     <code class="mr-3">{version}</code>
     <span
       class="text-md mr-1 rounded-md bg-gray-100 px-1 font-semibold dark:bg-gray-700 sm:text-lg"
