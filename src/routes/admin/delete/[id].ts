@@ -4,7 +4,7 @@ import type { RequestHandler } from '@sveltejs/kit';
 import { ROUTES_ADMIN } from '$lib/constants';
 import type { Album } from '$lib/types';
 
-export const get: RequestHandler = async ({ params, request }) => {
+export const GET: RequestHandler = async ({ params, request }) => {
   const { data: album, error } = await supabaseServerClient(request)
     .from<Album>('albums')
     .select('*')
@@ -22,7 +22,7 @@ export const get: RequestHandler = async ({ params, request }) => {
   };
 };
 
-export const del: RequestHandler = async ({ params, request, url }) => {
+export const DEL: RequestHandler = async ({ params, request, url }) => {
   const { id } = params;
 
   if (!id || typeof id !== 'string') {

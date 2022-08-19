@@ -4,7 +4,7 @@ import { APP_URL, ROUTE_HREF, ROUTES_ADMIN } from '$lib/constants';
 import { supabase } from '$lib/supabase';
 import { isEmailValid } from '$lib/utils';
 
-export async function get({ locals }: { locals: App.Locals }) {
+export async function GET({ locals }: { locals: App.Locals }) {
   if (locals.user) {
     return {
       status: 303,
@@ -16,7 +16,7 @@ export async function get({ locals }: { locals: App.Locals }) {
   };
 }
 
-export const post: RequestHandler = async ({ request, url }) => {
+export const POST: RequestHandler = async ({ request, url }) => {
   const formData = await request.formData();
   const email = formData.get('email');
   const password = formData.get('password');
@@ -60,7 +60,7 @@ export const post: RequestHandler = async ({ request, url }) => {
     const BASE_URL =
       process.env.NODE_ENV === 'production'
         ? APP_URL
-        : `http://0.0.0.0:${url.port}`;
+        : `http://localhost:${url.port}`;
 
     try {
       const res = await fetch(`${BASE_URL}/api/auth/callback`, {

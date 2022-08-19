@@ -4,7 +4,7 @@ import type { RequestHandler } from '@sveltejs/kit';
 import { ROUTE_HREF } from '$lib/constants';
 import type { Song } from '$lib/types';
 
-export const get: RequestHandler = async ({ request }) => {
+export const GET: RequestHandler = async ({ request }) => {
   const { data: songs, error } = await supabaseServerClient(request)
     .from<Song>('songs')
     .select('*')
@@ -21,7 +21,7 @@ export const get: RequestHandler = async ({ request }) => {
   };
 };
 
-export const post: RequestHandler = async ({ request }) => {
+export const POST: RequestHandler = async ({ request }) => {
   const formData = await request.formData();
   const artist = formData.get('artist');
   const title = formData.get('title');
@@ -65,7 +65,7 @@ export const post: RequestHandler = async ({ request }) => {
   };
 };
 
-export const del: RequestHandler = async ({ request }) => {
+export const DEL: RequestHandler = async ({ request }) => {
   const formData = await request.formData();
   const id = formData.get('id');
 

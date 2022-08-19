@@ -7,7 +7,7 @@ import type { Album } from '$lib/types';
 
 const { ASC, DESC } = SORT_DIRECTION;
 
-export const get: RequestHandler = async ({ request, url }) => {
+export const GET: RequestHandler = async ({ request, url }) => {
   const artist = parseQuery(url.searchParams.get('artist'));
   const page = parsePageQuery(url.searchParams.get('page'));
   const perPage = parsePerPageQuery(url.searchParams.get('perPage'));
@@ -72,7 +72,7 @@ export const get: RequestHandler = async ({ request, url }) => {
   };
 };
 
-export const post: RequestHandler = async ({ request, url }) => {
+export const POST: RequestHandler = async ({ request, url }) => {
   const formData = await request.formData();
   const artist = formData.get('artist');
   const title = formData.get('title');
