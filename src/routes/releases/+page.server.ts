@@ -1,5 +1,5 @@
-import { supabaseServerClient } from '@supabase/auth-helpers-sveltekit';
 import { type Action, error, redirect } from '@sveltejs/kit';
+import { supabaseServerClient } from '@supabase/auth-helpers-sveltekit';
 import type { PageServerLoad } from './$types';
 
 import { ROUTE_HREF } from '$lib/constants';

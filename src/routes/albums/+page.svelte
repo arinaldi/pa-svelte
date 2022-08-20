@@ -7,7 +7,7 @@
   import { formatFavorites, sortDesc } from '$lib/utils';
 
   export let data: PageData;
-  $: ({ favorites } = data);
+  $: favorites = data.favorites ?? [];
 </script>
 
 <svelte:head>
