@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { session } from '$app/stores';
+  import { page } from '$app/stores';
+  import type { PageData } from './$types';
 
   import Input from '$lib/components/Input.svelte';
   import Layout from '$lib/components/Layout.svelte';
@@ -9,9 +10,10 @@
   import PencilIcon from '$lib/icons/PencilIcon.svelte';
   import TrashIcon from '$lib/icons/TrashIcon.svelte';
   import { formatDate, formatReleases, sortByDate } from '$lib/utils';
-  import type { ModalType, Release } from '$lib/types';
+  import type { ModalType } from '$lib/types';
 
-  export let releases: Release[];
+  export let data: PageData;
+  $: ({ releases } = data);
   let modal: ModalType = { data: null, type: null };
   let artist = '';
   let title = '';
@@ -33,7 +35,7 @@
 <Layout>
   <span slot="title">New Releases</span>
   <span slot="titleAction">
-    {#if $session.user}
+    {#if $page.data.user}
       <span
         class="rounded-md px-1 py-1.5 hover:bg-gray-100"
         on:click={() => {
@@ -54,7 +56,7 @@
           {#each items as item (item.id)}
             <li class="dark:text-white">
               <span>{item.artist} &ndash; {item.title}</span>
-              {#if $session.user}
+              {#if $page.data.user}
                 <span
                   class="ml-1 p-1 hover:bg-gray-100 rounded-md cursor-pointer dark:text-white"
                   on:click={() => {

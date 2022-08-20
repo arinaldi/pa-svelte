@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { session } from '$app/stores';
+  import { page } from '$app/stores';
+  import type { PageData } from './$types';
 
   import Input from '$lib/components/Input.svelte';
   import Layout from '$lib/components/Layout.svelte';
@@ -8,15 +9,19 @@
   import DocumentAddIcon from '$lib/icons/DocumentAddIcon.svelte';
   import TrashIcon from '$lib/icons/TrashIcon.svelte';
 
-  import type { ModalType, Song } from '$lib/types';
+  import type { ModalType } from '$lib/types';
 
-  export let songs: Song[];
+  export let data: PageData;
+  $: ({ songs } = data);
   let modal: ModalType = { data: null, type: null };
   let artist = '';
   let title = '';
   let link = '';
 
   function onClose() {
+    artist = '';
+    title = '';
+    link = '';
     modal = { data: null, type: null };
   }
 </script>
@@ -29,7 +34,7 @@
 <Layout>
   <span slot="title">Featured Songs</span>
   <span slot="titleAction">
-    {#if $session.user}
+    {#if $page.data.user}
       <span
         class="rounded-md px-1 py-1.5 hover:bg-gray-100"
         on:click={() => {
@@ -64,7 +69,7 @@
           >
             Listen
           </a>
-          {#if $session.user}
+          {#if $page.data.user}
             <span
               class="ml-2 p-1 hover:bg-gray-100 rounded-md cursor-pointer dark:text-white"
               on:click={() => {

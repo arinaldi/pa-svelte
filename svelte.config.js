@@ -8,6 +8,7 @@ const config = {
     adapter: adapter(),
     methodOverride: {
       allowed: ['PUT', 'DELETE'],
+      parameter: '_method',
     },
   },
 };

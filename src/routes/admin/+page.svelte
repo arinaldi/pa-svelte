@@ -1,6 +1,8 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
+  import type { PageData } from './$types';
+
   import AppMessage from '$lib/components/AppMessage.svelte';
   import Button from '$lib/components/Button.svelte';
   import Column from '$lib/components/Column.svelte';
@@ -17,11 +19,10 @@
   import TrashIcon from '$lib/icons/TrashIcon.svelte';
   import { parsePerPageQuery, parseQuery } from '$lib/utils';
 
-  import type { Album } from '$lib/types';
-
-  export let albums: Album[];
-  export let cdTotal: number;
-  export let total: number;
+  export let data: PageData;
+  $: albums = data.albums ?? [];
+  $: cdTotal = data.cdTotal ?? 0;
+  $: total = data.total ?? 0;
 
   let artist = parseQuery($page.url.searchParams.get('artist'));
   let title = parseQuery($page.url.searchParams.get('title'));

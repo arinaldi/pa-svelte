@@ -1,8 +1,8 @@
 import { supabaseServerClient } from '@supabase/auth-helpers-sveltekit';
-import type { RequestHandler } from '@sveltejs/kit';
+import type { PageServerLoad } from '@sveltejs/kit';
 import type { Album } from '$lib/types';
 
-export const GET: RequestHandler = async ({ request }) => {
+export const load: PageServerLoad = async ({ request }) => {
   const { data: favorites, error } = await supabaseServerClient(request)
     .from<Album>('albums')
     .select('*')
@@ -10,12 +10,8 @@ export const GET: RequestHandler = async ({ request }) => {
     .order('artist', { ascending: true });
 
   if (error) {
-    return {
-      body: { error },
-    };
+    return { error };
   }
 
-  return {
-    body: { favorites },
-  };
+  return { favorites };
 };

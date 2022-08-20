@@ -1,59 +1,47 @@
-import type { RequestHandler } from '@sveltejs/kit';
+import { type Action, error, redirect } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 
 import { APP_URL, ROUTE_HREF, ROUTES_ADMIN } from '$lib/constants';
 import { supabase } from '$lib/supabase';
 import { isEmailValid } from '$lib/utils';
 
-export async function GET({ locals }: { locals: App.Locals }) {
-  if (locals.user) {
-    return {
-      status: 303,
-      headers: { location: ROUTES_ADMIN.base.href },
-    };
-  }
-  return {
-    status: 200,
-  };
-}
+export const load: PageServerLoad = async ({ parent }) => {
+  const { user } = await parent();
 
-export const POST: RequestHandler = async ({ request, url }) => {
+  if (user) {
+    throw redirect(303, ROUTES_ADMIN.base.href);
+  }
+
+  return { test: 3 };
+};
+
+export const POST: Action = async ({ request, setHeaders, url }) => {
   const formData = await request.formData();
   const email = formData.get('email');
   const password = formData.get('password');
 
   if (typeof email !== 'string' || !isEmailValid(email)) {
-    return {
-      body: { errors: { email: 'Email is invalid' } },
-      status: 400,
-    };
+    throw error(400, 'Email is invalid');
   }
 
   if (typeof password !== 'string' || password.length === 0) {
-    return {
-      body: { errors: { password: 'Password is required' } },
-      status: 400,
-    };
+    throw error(400, 'Password is required');
   }
 
-  const headers = {
-    location: ROUTE_HREF.SIGNIN as string,
-    'Set-Cookie': '',
-  };
-  const errors: Record<string, string> = {};
+  const errors: Record<string, unknown> = {};
   const values: Record<string, string> = { email, password };
+  const headers = { 'Set-Cookie': '' };
+  let location: string = ROUTE_HREF.SIGNIN;
 
-  const { error, session } = await supabase.auth.signIn({
+  const { error: supaError, session } = await supabase.auth.signIn({
     email,
     password,
   });
 
-  if (error) {
-    errors.form = error.message;
-
-    return {
-      body: { errors, values },
-      status: 400,
-    };
+  if (supaError) {
+    errors.form = supaError.message;
+    errors.values = values;
+    return { errors, status: 400 };
   }
 
   if (session) {
@@ -77,11 +65,7 @@ export const POST: RequestHandler = async ({ request, url }) => {
 
       if (!cookies) {
         errors.form = 'Error with cookies';
-
-        return {
-          body: { errors, values },
-          status: 400,
-        };
+        return { errors, status: 400 };
       }
 
       cookies.split('SameSite=Lax, ').map((cookie) => {
@@ -91,21 +75,14 @@ export const POST: RequestHandler = async ({ request, url }) => {
         return cookie;
       });
 
-      headers.location = ROUTES_ADMIN.base.href;
       headers['Set-Cookie'] = cookies;
-    } catch (error) {
-      errors.form =
-        error instanceof Error ? error.message : 'Something went wrong';
-
-      return {
-        body: { errors, values },
-        status: 400,
-      };
+      location = ROUTES_ADMIN.base.href;
+    } catch (err) {
+      errors.form = err instanceof Error ? err.message : 'Something went wrong';
+      return { errors, status: 400 };
     }
   }
 
-  return {
-    headers,
-    status: 303,
-  };
+  setHeaders(headers);
+  return { location };
 };

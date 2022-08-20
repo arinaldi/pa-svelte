@@ -1,5 +1,3 @@
-import type { JSONObject } from '@sveltejs/kit/types/private';
-
 import type { MODAL_TYPES } from '$lib/constants';
 
 export interface AlbumInput {
@@ -11,12 +9,12 @@ export interface AlbumInput {
   studio: boolean;
 }
 
-export interface Album extends AlbumInput, JSONObject {
+export interface Album extends AlbumInput {
   id: number;
   created_at: string;
 }
 
-export interface Release extends JSONObject {
+export interface Release {
   id: number;
   created_at: string;
   artist: string;
@@ -24,7 +22,7 @@ export interface Release extends JSONObject {
   date: string | null;
 }
 
-export interface Song extends JSONObject {
+export interface Song {
   id: number;
   created_at: string;
   artist: string;

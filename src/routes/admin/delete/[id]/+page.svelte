@@ -1,14 +1,15 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
+  import type { PageData } from './$types';
+
   import CancelButton from '$lib/components/CancelButton.svelte';
   import Layout from '$lib/components/Layout.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
   import { ROUTES_ADMIN } from '$lib/constants';
 
-  import type { Album } from '$lib/types';
-
-  export let album: Album;
+  export let data: PageData;
+  $: ({ album } = data);
 
   function onCancel() {
     goto(`${ROUTES_ADMIN.base.href}${$page.url.search}`);

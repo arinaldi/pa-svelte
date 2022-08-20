@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { session } from '$app/stores';
+  import { page } from '$app/stores';
   import { ROUTE_HREF, ROUTES, ROUTES_ADMIN, THEME } from '$lib/constants';
   import LinkWrapper from '$lib/components/LinkWrapper.svelte';
   import LoginIcon from '$lib/icons/LoginIcon.svelte';
@@ -65,7 +65,7 @@
                   {route.label}
                 </LinkWrapper>
               {/each}
-              {#if $session.user}
+              {#if $page.data.user}
                 <LinkWrapper href={ROUTES_ADMIN.base.href}>
                   {ROUTES_ADMIN.base.label}
                 </LinkWrapper>
@@ -87,7 +87,7 @@
         <div
           class="absolute inset-y-0 right-0 hidden pr-2 sm:static sm:inset-auto sm:ml-0 sm:flex sm:items-center sm:pr-0"
         >
-          {#if $session.user}
+          {#if $page.data.user}
             <a
               class="text-md cursor-pointer rounded-md px-3 py-2 font-medium text-gray-300 hover:bg-gray-700 hover:text-white dark:hover:bg-gray-800"
               href="/api/auth/logout"
@@ -115,7 +115,7 @@
             {route.label}
           </LinkWrapper>
         {/each}
-        {#if $session.user}
+        {#if $page.data.user}
           <span>
             <LinkWrapper
               classNames="block text-base"
