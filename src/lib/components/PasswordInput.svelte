@@ -2,7 +2,7 @@
   import EyeIcon from '$lib/icons/EyeIcon.svelte';
   import EyeOffIcon from '$lib/icons/EyeOffIcon.svelte';
 
-  export let value = '';
+  export let value: string;
   export let wrapperClass = '';
   let showPassword = false;
 
@@ -32,6 +32,7 @@
       name="password"
       required
       type={showPassword ? 'text' : 'password'}
+      {value}
     />
     <div
       aria-label="Show or hide password"

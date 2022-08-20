@@ -6,15 +6,10 @@
 
   interface Errors {
     form: string;
-  }
-
-  interface Values {
-    email: string;
-    password: string;
+    values: Record<string, string>;
   }
 
   export let errors: Errors | null = null;
-  export let values: Values | null = null;
 </script>
 
 <svelte:head>
@@ -32,17 +27,20 @@
             id="email"
             required
             type="email"
-            value={values?.email ?? ''}
+            value={errors?.values?.email ?? ''}
             wrapperClass="mt-4"
           />
-          <PasswordInput value={values?.password ?? ''} wrapperClass="mt-4" />
+          <PasswordInput
+            value={errors?.values?.password ?? ''}
+            wrapperClass="mt-4"
+          />
         </div>
       </div>
     </div>
     <div class="mt-4 flex items-center justify-end">
       <SubmitButton />
     </div>
-    {#if errors}
+    {#if errors?.form}
       <div class="mt-4 text-red-600 text-center">{errors.form}</div>
     {/if}
   </form>

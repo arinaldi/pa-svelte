@@ -1,12 +1,13 @@
 <script lang="ts">
   import { page } from '$app/stores';
+  import type { PageData } from './$types';
+
   import AlbumForm from '$lib/components/AlbumForm.svelte';
   import Layout from '$lib/components/Layout.svelte';
   import { ROUTES_ADMIN } from '$lib/constants';
 
-  import type { Album } from '$lib/types';
-
-  export let album: Album;
+  export let data: PageData;
+  $: ({ album } = data);
 </script>
 
 <svelte:head>

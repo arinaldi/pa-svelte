@@ -2,8 +2,9 @@
   import { SupaAuthHelper } from '@supabase/auth-helpers-svelte';
   import nProgress from 'nprogress';
 
-  import { navigating, session } from '$app/stores';
+  import { navigating, page } from '$app/stores';
   import Navbar from '$lib/components/Navbar.svelte';
+  import { session } from '$lib/session';
   import { supabase as supabaseClient } from '$lib/supabase';
   import '../app.css';
   import '../nprogress.css';
@@ -17,6 +18,8 @@
       nProgress.done();
     }
   }
+
+  $: $session = $page.data.session;
 </script>
 
 <svelte:head>

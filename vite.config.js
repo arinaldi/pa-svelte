@@ -12,7 +12,6 @@ const config = {
     APP_VERSION: pkg,
   },
   plugins: [sveltekit()],
-  server: { port: 3003 },
 };
 
 export default config;

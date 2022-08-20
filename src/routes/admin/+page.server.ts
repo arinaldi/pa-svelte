@@ -1,13 +1,20 @@
 import { supabaseServerClient } from '@supabase/auth-helpers-sveltekit';
-import type { RequestHandler } from '@sveltejs/kit';
+import { type Action, error, redirect } from '@sveltejs/kit';
+import type { PageServerLoad } from './$types';
 
-import { SORT_DIRECTION } from '$lib/constants';
+import { ROUTE_HREF, SORT_DIRECTION } from '$lib/constants';
 import { parsePageQuery, parsePerPageQuery, parseQuery } from '$lib/utils';
 import type { Album } from '$lib/types';
 
 const { ASC, DESC } = SORT_DIRECTION;
 
-export const get: RequestHandler = async ({ request, url }) => {
+export const load: PageServerLoad = async ({ parent, request, url }) => {
+  const { user } = await parent();
+
+  if (!user) {
+    throw redirect(303, ROUTE_HREF.TOP_ALBUMS);
+  }
+
   const artist = parseQuery(url.searchParams.get('artist'));
   const page = parsePageQuery(url.searchParams.get('page'));
   const perPage = parsePerPageQuery(url.searchParams.get('perPage'));
@@ -44,12 +51,10 @@ export const get: RequestHandler = async ({ request, url }) => {
     query = query.order('artist', { ascending: direction === ASC });
   }
 
-  const { data: albums, count, error } = await query;
+  const { data: albums, count, error: albumsError } = await query;
 
-  if (error) {
-    return {
-      body: { error },
-    };
+  if (albumsError) {
+    throw error(500, albumsError.message);
   }
 
   const { count: cdCount, error: cdError } = await supabaseServerClient(request)
@@ -58,21 +63,17 @@ export const get: RequestHandler = async ({ request, url }) => {
     .eq('cd', true);
 
   if (cdError) {
-    return {
-      body: { error: cdError },
-    };
+    throw error(500, cdError.message);
   }
 
   return {
-    body: {
-      albums,
-      cdTotal: cdCount,
-      total: count,
-    },
+    albums: albums as Album[],
+    cdTotal: cdCount,
+    total: count,
   };
 };
 
-export const post: RequestHandler = async ({ request, url }) => {
+export const POST: Action = async ({ request, url }) => {
   const formData = await request.formData();
   const artist = formData.get('artist');
   const title = formData.get('title');
@@ -82,27 +83,18 @@ export const post: RequestHandler = async ({ request, url }) => {
   const studio = formData.get('studio');
 
   if (typeof artist !== 'string' || artist.length === 0) {
-    return {
-      body: { errors: { artist: 'Artist is required' } },
-      status: 400,
-    };
+    throw error(400, 'Artist is required');
   }
 
   if (typeof title !== 'string' || title.length === 0) {
-    return {
-      body: { errors: { title: 'Title is required' } },
-      status: 400,
-    };
+    throw error(400, 'Title is required');
   }
 
   if (typeof year !== 'string' || year.length === 0) {
-    return {
-      body: { errors: { year: 'Year is invalid' } },
-      status: 400,
-    };
+    throw error(400, 'Year is invalid');
   }
 
-  const { error } = await supabaseServerClient(request)
+  const { error: supaError } = await supabaseServerClient(request)
     .from<Album>('albums')
     .insert([
       {
@@ -115,15 +107,9 @@ export const post: RequestHandler = async ({ request, url }) => {
       },
     ]);
 
-  if (error) {
-    return {
-      body: { error },
-      status: 500,
-    };
+  if (supaError) {
+    throw error(500, supaError.message);
   }
 
-  return {
-    headers: { location: url.href },
-    status: 303,
-  };
+  throw redirect(303, url.href);
 };

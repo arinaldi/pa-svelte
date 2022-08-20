@@ -1,12 +1,13 @@
 <script lang="ts">
+  import type { PageData } from './$types';
+
   import Layout from '$lib/components/Layout.svelte';
   import ArrowUpIcon from '$lib/icons/ArrowUpIcon.svelte';
   import { SPOTIFY_URL } from '$lib/constants';
   import { formatFavorites, sortDesc } from '$lib/utils';
 
-  import type { Album } from '$lib/types';
-
-  export let favorites: Album[];
+  export let data: PageData;
+  $: favorites = data.favorites ?? [];
 </script>
 
 <svelte:head>
