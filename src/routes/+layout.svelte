@@ -1,13 +1,17 @@
 <script lang="ts">
-  import { SupaAuthHelper } from '@supabase/auth-helpers-svelte';
+  import { getContext, setContext } from 'svelte';
+  import { writable, type Writable } from 'svelte/store';
+  import { SupaAuthHelper, type Session } from '@supabase/auth-helpers-svelte';
   import nProgress from 'nprogress';
 
   import { navigating, page } from '$app/stores';
   import Navbar from '$lib/components/Navbar.svelte';
-  import { session } from '$lib/session';
   import { supabase as supabaseClient } from '$lib/supabase';
   import '../app.css';
   import '../nprogress.css';
+
+  setContext('session', writable<Session>($page.data.session));
+  const session = getContext<Writable<Session>>('session');
 
   $: {
     const isSameRoute = $navigating?.from.pathname === $navigating?.to.pathname;
@@ -18,8 +22,6 @@
       nProgress.done();
     }
   }
-
-  $: $session = $page.data.session;
 </script>
 
 <svelte:head>

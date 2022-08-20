@@ -12,7 +12,7 @@ export const load: PageServerLoad = async ({ parent }) => {
     throw redirect(303, ROUTES_ADMIN.base.href);
   }
 
-  return { test: 3 };
+  return {};
 };
 
 export const POST: Action = async ({ request, setHeaders, url }) => {
