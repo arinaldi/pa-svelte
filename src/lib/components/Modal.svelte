@@ -2,7 +2,7 @@
   import { fade } from 'svelte/transition';
 
   import Spinner from '$lib/components/Spinner.svelte';
-  import XIcon from '$lib/icons/XIcon.svelte';
+  import XMarkIcon from '$lib/icons/XMarkIcon.svelte';
 
   export let action = '';
   export let isSubmitting = false;
@@ -36,7 +36,7 @@
               class="p-1 hover:bg-gray-100 rounded-full"
               on:click={onClose}
             >
-              <XIcon className="h-6 w-6" />
+              <XMarkIcon className="h-6 w-6" />
             </button>
           </div>
           <div class="mt-2">

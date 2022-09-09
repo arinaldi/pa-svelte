@@ -14,7 +14,7 @@
   import SubmitButton from '$lib/components/SubmitButton.svelte';
   import { APP_MESSAGE_TYPES, PER_PAGE, ROUTES_ADMIN } from '$lib/constants';
   import CheckIcon from '$lib/icons/CheckIcon.svelte';
-  import DocumentAddIcon from '$lib/icons/DocumentAddIcon.svelte';
+  import DocumentPlusIcon from '$lib/icons/DocumentPlusIcon.svelte';
   import PencilIcon from '$lib/icons/PencilIcon.svelte';
   import TrashIcon from '$lib/icons/TrashIcon.svelte';
   import { parsePerPageQuery, parseQuery } from '$lib/utils';
@@ -82,7 +82,7 @@
       class="rounded-md px-1 py-1.5 hover:bg-gray-200"
       href={`${ROUTES_ADMIN.create.href}${$page.url.search}`}
     >
-      <DocumentAddIcon
+      <DocumentPlusIcon
         className="inline h-6 w-6 cursor-pointer dark:text-white"
       />
     </a>

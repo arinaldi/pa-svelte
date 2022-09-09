@@ -2,12 +2,12 @@
   import { page } from '$app/stores';
   import { ROUTE_HREF, ROUTES, ROUTES_ADMIN, THEME } from '$lib/constants';
   import LinkWrapper from '$lib/components/LinkWrapper.svelte';
-  import LoginIcon from '$lib/icons/LoginIcon.svelte';
-  import LogoutIcon from '$lib/icons/LogoutIcon.svelte';
-  import MenuIcon from '$lib/icons/MenuIcon.svelte';
+  import ArrowLeftOnRectangleIcon from '$lib/icons/ArrowLeftOnRectangleIcon.svelte';
+  import ArrowRightOnRectangleIcon from '$lib/icons/ArrowRightOnRectangleIcon.svelte';
+  import Bars3Icon from '$lib/icons/Bars3Icon.svelte';
   import MoonIcon from '$lib/icons/MoonIcon.svelte';
   import SunIcon from '$lib/icons/SunIcon.svelte';
-  import XIcon from '$lib/icons/XIcon.svelte';
+  import XMarkIcon from '$lib/icons/XMarkIcon.svelte';
 
   let open = false;
   const { DARK, LIGHT } = THEME;
@@ -46,8 +46,8 @@
             type="button"
           >
             <span class="sr-only">Open main menu</span>
-            <MenuIcon className={`${open ? 'hidden' : 'block'} h-6 w-6`} />
-            <XIcon className={`${open ? 'block' : 'hidden'} h-6 w-6`} />
+            <Bars3Icon className={`${open ? 'hidden' : 'block'} h-6 w-6`} />
+            <XMarkIcon className={`${open ? 'block' : 'hidden'} h-6 w-6`} />
           </button>
         </div>
         <div
@@ -92,11 +92,11 @@
               class="text-md cursor-pointer rounded-md px-3 py-2 font-medium text-gray-300 hover:bg-gray-700 hover:text-white dark:hover:bg-gray-800"
               href="/api/auth/logout"
             >
-              <LogoutIcon className="h-5 w-5" />
+              <ArrowRightOnRectangleIcon className="h-5 w-5" />
             </a>
           {:else}
             <LinkWrapper href={ROUTE_HREF.SIGNIN}>
-              <LoginIcon className="h-5 w-5" />
+              <ArrowLeftOnRectangleIcon className="h-5 w-5" />
             </LinkWrapper>
           {/if}
         </div>

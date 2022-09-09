@@ -6,7 +6,7 @@
   import Layout from '$lib/components/Layout.svelte';
   import Modal from '$lib/components/Modal.svelte';
   import { MODAL_TYPES } from '$lib/constants';
-  import DocumentAddIcon from '$lib/icons/DocumentAddIcon.svelte';
+  import DocumentPlusIcon from '$lib/icons/DocumentPlusIcon.svelte';
   import PencilIcon from '$lib/icons/PencilIcon.svelte';
   import TrashIcon from '$lib/icons/TrashIcon.svelte';
   import { formatDate, formatReleases, sortByDate } from '$lib/utils';
@@ -42,7 +42,7 @@
           modal = { data: null, type: MODAL_TYPES.CREATE };
         }}
       >
-        <DocumentAddIcon
+        <DocumentPlusIcon
           className="inline h-6 w-6 cursor-pointer dark:text-white"
         />
       </span>

@@ -1,6 +1,6 @@
 <script lang="ts">
   import EyeIcon from '$lib/icons/EyeIcon.svelte';
-  import EyeOffIcon from '$lib/icons/EyeOffIcon.svelte';
+  import EyeSlashIcon from '$lib/icons/EyeSlashIcon.svelte';
 
   export let value: string;
   export let wrapperClass = '';
@@ -42,7 +42,7 @@
       {#if showPassword}
         <EyeIcon className="h-5 w-5" />
       {:else}
-        <EyeOffIcon className="h-5 w-5" />
+        <EyeSlashIcon className="h-5 w-5" />
       {/if}
     </div>
   </div>

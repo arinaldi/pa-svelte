@@ -1,7 +1,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
-  import ArrowNarrowDownIcon from '$lib/icons/ArrowNarrowDownIcon.svelte';
+  import ArrowLongDownIcon from '$lib/icons/ArrowLongDownIcon.svelte';
   import { parseQuery } from '$lib/utils';
 
   export let prop: string;
@@ -45,7 +45,7 @@
           : 'invisible text-gray-400 group-hover:visible'
       } ml-1 flex-none`}
     >
-      <ArrowNarrowDownIcon
+      <ArrowLongDownIcon
         className={`${desc ? 'rotate-180' : ''} inline h-4 w-4`}
       />
     </span>
