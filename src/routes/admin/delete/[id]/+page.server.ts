@@ -1,5 +1,5 @@
 import { supabaseServerClient } from '@supabase/auth-helpers-sveltekit';
-import { type Action, error, redirect } from '@sveltejs/kit';
+import { type Actions, invalid, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 import { ROUTES_ADMIN, ROUTE_HREF } from '$lib/constants';
@@ -12,36 +12,40 @@ export const load: PageServerLoad = async ({ params, parent, request }) => {
     throw redirect(303, ROUTE_HREF.TOP_ALBUMS);
   }
 
-  const { data: album, error: supaError } = await supabaseServerClient(request)
+  const { data: album, error } = await supabaseServerClient(request)
     .from<Album>('albums')
     .select('*')
     .eq('id', params.id)
     .single();
 
-  if (supaError) {
-    throw error(500, supaError.message);
+  if (error) {
+    return invalid(500, { general: error.message });
   }
 
   return { album };
 };
 
-export const DELETE: Action = async ({ params, request, url }) => {
-  const { id } = params;
+export const actions: Actions = {
+  default: async ({ locals, params, request, url }) => {
+    if (!locals.user) {
+      throw redirect(303, ROUTE_HREF.TOP_ALBUMS);
+    }
 
-  if (!id || typeof id !== 'string') {
-    throw error(400, 'ID is required');
-  }
+    const { id } = params;
 
-  const { error: supaError } = await supabaseServerClient(request)
-    .from<Album>('albums')
-    .delete()
-    .eq('id', id);
+    if (!id || typeof id !== 'string') {
+      return invalid(400, { general: 'ID is required' });
+    }
 
-  if (supaError) {
-    throw error(500, supaError.message);
-  }
+    const { error } = await supabaseServerClient(request)
+      .from<Album>('albums')
+      .delete()
+      .eq('id', id);
 
-  const [query] = url.search.split('&_');
+    if (error) {
+      return invalid(500, { general: error.message });
+    }
 
-  throw redirect(303, `${ROUTES_ADMIN.base.href}${query}`);
+    throw redirect(303, `${ROUTES_ADMIN.base.href}${url.search}`);
+  },
 };

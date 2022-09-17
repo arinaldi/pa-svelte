@@ -14,7 +14,8 @@
   const session = getContext<Writable<Session>>('session');
 
   $: {
-    const isSameRoute = $navigating?.from.pathname === $navigating?.to.pathname;
+    const isSameRoute =
+      $navigating?.from.url.pathname === $navigating?.to.url.pathname;
 
     if (nProgress && $navigating && !isSameRoute) {
       nProgress.start();

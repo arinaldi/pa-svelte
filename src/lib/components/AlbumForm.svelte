@@ -9,7 +9,6 @@
 
   import type { AlbumInput } from '$lib/types';
 
-  export let action = '';
   export let album: AlbumInput;
 
   function onCancel() {
@@ -17,7 +16,7 @@
   }
 </script>
 
-<form {action} method="post">
+<form method="post">
   <div class="bg-white p-6 dark:bg-gray-800">
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
       <Input

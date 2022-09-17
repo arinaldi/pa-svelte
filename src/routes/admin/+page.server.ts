@@ -1,8 +1,9 @@
 import { supabaseServerClient } from '@supabase/auth-helpers-sveltekit';
-import { type Action, error, redirect } from '@sveltejs/kit';
+import { invalid, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 import { ROUTE_HREF, SORT_DIRECTION } from '$lib/constants';
+
 import { parsePageQuery, parsePerPageQuery, parseQuery } from '$lib/utils';
 import type { Album } from '$lib/types';
 
@@ -54,7 +55,7 @@ export const load: PageServerLoad = async ({ parent, request, url }) => {
   const { data: albums, count, error: albumsError } = await query;
 
   if (albumsError) {
-    throw error(500, albumsError.message);
+    return invalid(500, { general: albumsError.message });
   }
 
   const { count: cdCount, error: cdError } = await supabaseServerClient(request)
@@ -63,7 +64,7 @@ export const load: PageServerLoad = async ({ parent, request, url }) => {
     .eq('cd', true);
 
   if (cdError) {
-    throw error(500, cdError.message);
+    return invalid(500, { general: cdError.message });
   }
 
   return {
@@ -71,45 +72,4 @@ export const load: PageServerLoad = async ({ parent, request, url }) => {
     cdTotal: cdCount,
     total: count,
   };
-};
-
-export const POST: Action = async ({ request, url }) => {
-  const formData = await request.formData();
-  const artist = formData.get('artist');
-  const title = formData.get('title');
-  const year = formData.get('year');
-  const cd = formData.get('cd');
-  const favorite = formData.get('favorite');
-  const studio = formData.get('studio');
-
-  if (typeof artist !== 'string' || artist.length === 0) {
-    throw error(400, 'Artist is required');
-  }
-
-  if (typeof title !== 'string' || title.length === 0) {
-    throw error(400, 'Title is required');
-  }
-
-  if (typeof year !== 'string' || year.length === 0) {
-    throw error(400, 'Year is invalid');
-  }
-
-  const { error: supaError } = await supabaseServerClient(request)
-    .from<Album>('albums')
-    .insert([
-      {
-        artist,
-        title,
-        year,
-        cd: cd === 'on',
-        favorite: favorite === 'on',
-        studio: studio === 'on',
-      },
-    ]);
-
-  if (supaError) {
-    throw error(500, supaError.message);
-  }
-
-  throw redirect(303, url.href);
 };

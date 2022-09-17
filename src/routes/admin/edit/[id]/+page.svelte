@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { page } from '$app/stores';
   import type { PageData } from './$types';
 
   import AlbumForm from '$lib/components/AlbumForm.svelte';
@@ -19,8 +18,5 @@
   <span slot="title">
     {ROUTES_ADMIN.edit.label}
   </span>
-  <AlbumForm
-    action={`/admin/edit/${album.id}${$page.url.search}&_method=put`}
-    {album}
-  />
+  <AlbumForm {album} />
 </Layout>

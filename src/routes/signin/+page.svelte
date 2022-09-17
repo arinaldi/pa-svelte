@@ -1,15 +1,12 @@
 <script lang="ts">
+  import type { ActionData } from './$types';
+
   import Input from '$lib/components/Input.svelte';
   import Layout from '$lib/components/Layout.svelte';
   import PasswordInput from '$lib/components/PasswordInput.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
 
-  interface Errors {
-    form: string;
-    values: Record<string, string>;
-  }
-
-  export let errors: Errors | null = null;
+  export let form: ActionData;
 </script>
 
 <svelte:head>
@@ -27,21 +24,18 @@
             id="email"
             required
             type="email"
-            value={errors?.values?.email ?? ''}
+            value={form?.email ?? ''}
             wrapperClass="mt-4"
           />
-          <PasswordInput
-            value={errors?.values?.password ?? ''}
-            wrapperClass="mt-4"
-          />
+          <PasswordInput value="" wrapperClass="mt-4" />
         </div>
       </div>
     </div>
     <div class="mt-4 flex items-center justify-end">
       <SubmitButton />
     </div>
-    {#if errors?.form}
-      <div class="mt-4 text-red-600 text-center">{errors.form}</div>
+    {#if form?.general}
+      <div class="mt-4 text-red-600 text-center">{form.general}</div>
     {/if}
   </form>
 </Layout>

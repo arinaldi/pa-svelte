@@ -85,7 +85,7 @@
   </div>
 
   {#if modal.type === MODAL_TYPES.CREATE}
-    <Modal {onClose}>
+    <Modal action="?/createSong" {onClose}>
       <span slot="title">Create Song</span>
       <div class="w-full" slot="body">
         <Input
@@ -112,7 +112,7 @@
       </div>
     </Modal>
   {:else if modal.type === MODAL_TYPES.DELETE && modal.data}
-    <Modal action="/songs?_method=delete" {onClose}>
+    <Modal action="?/deleteSong" {onClose}>
       <span slot="title">Delete Song</span>
       <div slot="body">
         <input name="id" type="hidden" value={modal.data.id} />
