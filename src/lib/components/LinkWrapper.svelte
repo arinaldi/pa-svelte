@@ -12,9 +12,9 @@
   class={`${
     isActive ? 'text-white' : 'text-gray-300'
   } ${classNames} rounded-md px-3 py-2 font-medium hover:bg-gray-700 hover:text-white dark:hover:bg-gray-800`}
+  data-sveltekit-prefetch
   {href}
   on:click={closeMenu}
-  sveltekit:prefetch
 >
   <span class={`${isActive ? 'border-b-2' : ''} pb-1`}>
     <slot />

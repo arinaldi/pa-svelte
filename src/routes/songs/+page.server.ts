@@ -1,68 +1,77 @@
 import { supabaseServerClient } from '@supabase/auth-helpers-sveltekit';
-import { type Action, error, redirect } from '@sveltejs/kit';
+import { type Actions, invalid, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 import { ROUTE_HREF } from '$lib/constants';
 import type { Song } from '$lib/types';
 
 export const load: PageServerLoad = async ({ request }) => {
-  const { data: songs, error: supaError } = await supabaseServerClient(request)
+  const { data: songs, error } = await supabaseServerClient(request)
     .from<Song>('songs')
     .select('*')
     .order('created_at', { ascending: false });
 
-  if (supaError) {
-    throw error(500, supaError.message);
+  if (error) {
+    return invalid(500, { general: error.message });
   }
 
   return { songs };
 };
 
-export const POST: Action = async ({ request }) => {
-  const formData = await request.formData();
-  const artist = formData.get('artist');
-  const title = formData.get('title');
-  const link = formData.get('link');
+export const actions: Actions = {
+  createSong: async ({ locals, request }) => {
+    if (!locals.user) {
+      return invalid(404, { general: 'Not authorized' });
+    }
 
-  if (typeof artist !== 'string' || artist.length === 0) {
-    throw error(400, 'Artist is required');
-  }
+    const formData = await request.formData();
+    const artist = formData.get('artist');
+    const title = formData.get('title');
+    const link = formData.get('link');
 
-  if (typeof title !== 'string' || title.length === 0) {
-    throw error(400, 'Title is required');
-  }
+    if (typeof artist !== 'string' || artist.length === 0) {
+      return invalid(400, { artist: 'Artist is required' });
+    }
 
-  if (typeof link !== 'string' || !link.startsWith('http')) {
-    throw error(400, 'Link is invalid');
-  }
+    if (typeof title !== 'string' || title.length === 0) {
+      return invalid(400, { title: 'Title is required' });
+    }
 
-  const { error: supaError } = await supabaseServerClient(request)
-    .from<Song>('songs')
-    .insert([{ artist, title, link }]);
+    if (typeof link !== 'string' || !link.startsWith('http')) {
+      return invalid(400, { link: 'Link is invalid' });
+    }
 
-  if (supaError) {
-    throw error(500, supaError.message);
-  }
+    const { error } = await supabaseServerClient(request)
+      .from<Song>('songs')
+      .insert([{ artist, title, link }]);
 
-  throw redirect(303, ROUTE_HREF.FEATURED_SONGS);
-};
+    if (error) {
+      return invalid(500, { general: error.message });
+    }
 
-export const DELETE: Action = async ({ request }) => {
-  const formData = await request.formData();
-  const id = formData.get('id');
+    throw redirect(303, ROUTE_HREF.FEATURED_SONGS);
+  },
+  deleteSong: async ({ locals, request }) => {
+    if (!locals.user) {
+      return invalid(404, { general: 'Not authorized' });
+    }
 
-  if (!id || typeof id !== 'string') {
-    throw error(400, 'ID is required');
-  }
+    const formData = await request.formData();
+    const id = formData.get('id');
 
-  const { error: supaError } = await supabaseServerClient(request)
-    .from<Song>('songs')
-    .delete()
-    .eq('id', id);
+    if (!id || typeof id !== 'string') {
+      return invalid(400, { general: 'ID is required' });
+    }
 
-  if (supaError) {
-    throw error(500, supaError.message);
-  }
+    const { error } = await supabaseServerClient(request)
+      .from<Song>('songs')
+      .delete()
+      .eq('id', id);
 
-  throw redirect(303, ROUTE_HREF.FEATURED_SONGS);
+    if (error) {
+      return invalid(500, { general: error.message });
+    }
+
+    throw redirect(303, ROUTE_HREF.FEATURED_SONGS);
+  },
 };

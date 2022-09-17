@@ -5,33 +5,22 @@ import type { PageServerLoad } from './$types';
 import { ROUTES_ADMIN, ROUTE_HREF } from '$lib/constants';
 import type { Album } from '$lib/types';
 
-export const load: PageServerLoad = async ({ params, parent, request }) => {
+export const load: PageServerLoad = async ({ parent }) => {
   const { user } = await parent();
 
   if (!user) {
     throw redirect(303, ROUTE_HREF.TOP_ALBUMS);
   }
 
-  const { data: album, error } = await supabaseServerClient(request)
-    .from<Album>('albums')
-    .select('*')
-    .eq('id', params.id)
-    .single();
-
-  if (error) {
-    return invalid(500, { general: error.message });
-  }
-
-  return { album };
+  return {};
 };
 
 export const actions: Actions = {
-  default: async ({ locals, params, request, url }) => {
+  default: async ({ locals, request, url }) => {
     if (!locals.user) {
       throw redirect(303, ROUTE_HREF.TOP_ALBUMS);
     }
 
-    const { id } = params;
     const formData = await request.formData();
     const artist = formData.get('artist');
     const title = formData.get('title');
@@ -39,10 +28,6 @@ export const actions: Actions = {
     const cd = formData.get('cd');
     const favorite = formData.get('favorite');
     const studio = formData.get('studio');
-
-    if (!id || typeof id !== 'string') {
-      return invalid(400, { general: 'ID is required' });
-    }
 
     if (typeof artist !== 'string' || artist.length === 0) {
       return invalid(400, { artist: 'Artist is required' });
@@ -56,17 +41,18 @@ export const actions: Actions = {
       return invalid(400, { year: 'Year is invalid' });
     }
 
-    const { error } = await supabaseServerClient(request)
+    const { error: error } = await supabaseServerClient(request)
       .from<Album>('albums')
-      .update({
-        artist,
-        title,
-        year,
-        cd: cd === 'on',
-        favorite: favorite === 'on',
-        studio: studio === 'on',
-      })
-      .eq('id', id);
+      .insert([
+        {
+          artist,
+          title,
+          year,
+          cd: cd === 'on',
+          favorite: favorite === 'on',
+          studio: studio === 'on',
+        },
+      ]);
 
     if (error) {
       return invalid(500, { general: error.message });

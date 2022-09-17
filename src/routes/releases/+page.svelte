@@ -85,7 +85,7 @@
   </div>
 
   {#if modal.type === MODAL_TYPES.CREATE}
-    <Modal {onClose}>
+    <Modal action="?/createRelease" {onClose}>
       <span slot="title">Create Release</span>
       <div class="w-full" slot="body">
         <Input
@@ -106,7 +106,7 @@
       </div>
     </Modal>
   {:else if modal.type === MODAL_TYPES.EDIT && modal.data}
-    <Modal action="/releases?_method=put" {onClose}>
+    <Modal action="?/editRelease" {onClose}>
       <span slot="title">Edit Release</span>
       <div class="w-full" slot="body">
         <input name="id" type="hidden" value={modal.data.id} />
@@ -128,7 +128,7 @@
       </div>
     </Modal>
   {:else if modal.type === MODAL_TYPES.DELETE && modal.data}
-    <Modal action="/releases?_method=delete" {onClose}>
+    <Modal action="?/deleteRelease" {onClose}>
       <span slot="title">Delete Release</span>
       <div slot="body">
         <input name="id" type="hidden" value={modal.data.id} />
