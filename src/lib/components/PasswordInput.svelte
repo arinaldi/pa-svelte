@@ -36,7 +36,7 @@
     />
     <div
       aria-label="Show or hide password"
-      class="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-3"
+      class="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-3 dark:text-white"
       on:click={toggleShowPassword}
     >
       {#if showPassword}

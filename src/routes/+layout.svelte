@@ -15,7 +15,7 @@
 
   $: {
     const isSameRoute =
-      $navigating?.from.url.pathname === $navigating?.to.url.pathname;
+      $navigating?.from?.url.pathname === $navigating?.to?.url.pathname;
 
     if (nProgress && $navigating && !isSameRoute) {
       nProgress.start();
