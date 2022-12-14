@@ -21,19 +21,19 @@
     <div class="flex justify-center items-start min-h-full p-4 sm:p-0">
       <form
         {action}
-        class="relative bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all my-8 max-w-lg w-full sm:p-6"
+        class="relative bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all my-8 max-w-lg w-full sm:p-6 dark:bg-gray-800"
         method="post"
       >
         <div class="mt-3 sm:mt-0 sm:text-left">
           <div class="flex justify-between items-center">
             <h3
-              class="text-xl leading-6 font-medium text-gray-900"
+              class="text-xl leading-6 font-medium text-gray-900 dark:text-white"
               id="modal-title"
             >
               <slot name="title" />
             </h3>
             <button
-              class="p-1 hover:bg-gray-100 rounded-full"
+              class="p-1 hover:bg-gray-100 rounded-full dark:hover:bg-gray-900 dark:text-white"
               on:click={onClose}
             >
               <XMarkIcon className="h-6 w-6" />
@@ -56,7 +56,7 @@
             {/if}
           </button>
           <button
-            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
+            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm dark:bg-gray-600 dark:text-white dark:border-gray-600"
             on:click={onClose}
             type="button"
           >
