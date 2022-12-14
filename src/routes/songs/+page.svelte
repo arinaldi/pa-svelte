@@ -34,7 +34,7 @@
 <Layout>
   <span slot="title">Featured Songs</span>
   <span slot="titleAction">
-    {#if $page.data.user}
+    {#if $page.data.session}
       <span
         class="rounded-md px-1 py-1.5 hover:bg-gray-100"
         on:click={() => {
@@ -69,7 +69,7 @@
           >
             Listen
           </a>
-          {#if $page.data.user}
+          {#if $page.data.session}
             <span
               class="ml-2 p-1 hover:bg-gray-100 rounded-md cursor-pointer dark:text-white"
               on:click={() => {

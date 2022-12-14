@@ -16,7 +16,7 @@
 
 <Layout maxWidth="max-w-sm">
   <span slot="title">Sign In</span>
-  <form method="post">
+  <form action="?/signIn" method="post">
     <div class="bg-white dark:bg-gray-800">
       <div class="grid grid-cols-6 gap-6">
         <div class="col-span-6">
@@ -34,8 +34,8 @@
     <div class="mt-4 flex items-center justify-end">
       <SubmitButton />
     </div>
-    {#if form?.general}
-      <div class="mt-4 text-red-600 text-center">{form.general}</div>
+    {#if form?.error}
+      <div class="mt-4 text-red-600 text-center">{form.error}</div>
     {/if}
   </form>
 </Layout>

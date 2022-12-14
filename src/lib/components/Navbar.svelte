@@ -65,7 +65,7 @@
                   {route.label}
                 </LinkWrapper>
               {/each}
-              {#if $page.data.user}
+              {#if $page.data.session}
                 <LinkWrapper href={ROUTES_ADMIN.base.href}>
                   {ROUTES_ADMIN.base.label}
                 </LinkWrapper>
@@ -87,13 +87,15 @@
         <div
           class="absolute inset-y-0 right-0 hidden pr-2 sm:static sm:inset-auto sm:ml-0 sm:flex sm:items-center sm:pr-0"
         >
-          {#if $page.data.user}
-            <a
-              class="text-md cursor-pointer rounded-md px-3 py-2 font-medium text-gray-300 hover:bg-gray-700 hover:text-white dark:hover:bg-gray-800"
-              href="/api/auth/logout"
-            >
-              <ArrowRightOnRectangleIcon className="h-5 w-5" />
-            </a>
+          {#if $page.data.session}
+            <form action="/signin?/signOut" method="post">
+              <button
+                class="text-md cursor-pointer rounded-md px-3 py-2 font-medium text-gray-300 hover:bg-gray-700 hover:text-white dark:hover:bg-gray-800"
+                type="submit"
+              >
+                <ArrowRightOnRectangleIcon className="h-5 w-5" />
+              </button>
+            </form>
           {:else}
             <LinkWrapper href={ROUTE_HREF.SIGNIN}>
               <ArrowLeftOnRectangleIcon className="h-5 w-5" />
@@ -115,7 +117,7 @@
             {route.label}
           </LinkWrapper>
         {/each}
-        {#if $page.data.user}
+        {#if $page.data.session}
           <span>
             <LinkWrapper
               classNames="block text-base"
@@ -124,15 +126,18 @@
             >
               {ROUTES_ADMIN.base.label}
             </LinkWrapper>
-            <a
-              class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-              href="/api/auth/logout"
-              on:click={() => {
-                closeMenu();
-              }}
-            >
-              Sign Out
-            </a>
+            <form action="/signin?/signOut" method="post">
+              <button
+                class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                href="/api/auth/logout"
+                on:click={() => {
+                  closeMenu();
+                }}
+                type="submit"
+              >
+                Sign Out
+              </button>
+            </form>
           </span>
         {:else}
           <LinkWrapper

@@ -1,13 +1,8 @@
-import { supabase } from '$lib/supabase';
 import type { LayoutServerLoad } from './$types';
+import { getServerSession } from '@supabase/auth-helpers-sveltekit';
 
-export const load: LayoutServerLoad = async ({ locals }) => {
-  if (!locals.user) return {};
-
+export const load: LayoutServerLoad = async (event) => {
   return {
-    accessToken: locals.accessToken,
-    error: locals.error,
-    session: supabase.auth.session(),
-    user: locals.user,
+    session: await getServerSession(event),
   };
 };
