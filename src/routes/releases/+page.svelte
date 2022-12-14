@@ -35,7 +35,7 @@
 <Layout>
   <span slot="title">New Releases</span>
   <span slot="titleAction">
-    {#if $page.data.user}
+    {#if $page.data.session}
       <span
         class="rounded-md px-1 py-1.5 hover:bg-gray-100"
         on:click={() => {
@@ -56,7 +56,7 @@
           {#each items as item (item.id)}
             <li class="dark:text-white">
               <span>{item.artist} &ndash; {item.title}</span>
-              {#if $page.data.user}
+              {#if $page.data.session}
                 <span
                   class="ml-1 p-1 hover:bg-gray-100 rounded-md cursor-pointer dark:text-white"
                   on:click={() => {

@@ -1,17 +1,25 @@
 <script lang="ts">
-  import { getContext, setContext } from 'svelte';
-  import { writable, type Writable } from 'svelte/store';
-  import { SupaAuthHelper, type Session } from '@supabase/auth-helpers-svelte';
+  import { onMount } from 'svelte';
   import nProgress from 'nprogress';
 
-  import { navigating, page } from '$app/stores';
+  import { invalidate } from '$app/navigation';
+  import { navigating } from '$app/stores';
   import Navbar from '$lib/components/Navbar.svelte';
-  import { supabase as supabaseClient } from '$lib/supabase';
+  import { supabaseClient } from '$lib/db';
   import '../app.css';
   import '../nprogress.css';
 
-  setContext('session', writable<Session>($page.data.session));
-  const session = getContext<Writable<Session>>('session');
+  onMount(() => {
+    const {
+      data: { subscription },
+    } = supabaseClient.auth.onAuthStateChange(() => {
+      invalidate('supabase:auth');
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  });
 
   $: {
     const isSameRoute =
@@ -41,7 +49,7 @@
   </script>
 </svelte:head>
 
-<SupaAuthHelper {supabaseClient} {session}>
+<main>
   <Navbar />
   <slot />
-</SupaAuthHelper>
+</main>

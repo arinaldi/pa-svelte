@@ -1,15 +1,14 @@
-import { type Actions, invalid, redirect } from '@sveltejs/kit';
-import cookie from 'cookie';
-import type { PageServerLoad } from './$types';
+import { fail, redirect } from '@sveltejs/kit';
+import type { Actions, PageServerLoad } from './$types';
+import { getSupabase } from '@supabase/auth-helpers-sveltekit';
+import { AuthApiError } from '@supabase/supabase-js';
 
-import { APP_URL, ROUTE_HREF, ROUTES_ADMIN } from '$lib/constants';
-import { supabase } from '$lib/supabase';
-import { isEmailValid } from '$lib/utils';
+import { ROUTE_HREF, ROUTES_ADMIN } from '$lib/constants';
 
-export const load: PageServerLoad = async ({ parent }) => {
-  const { user } = await parent();
+export const load: PageServerLoad = async (event) => {
+  const { session } = await getSupabase(event);
 
-  if (user) {
+  if (session) {
     throw redirect(303, ROUTES_ADMIN.base.href);
   }
 
@@ -17,84 +16,35 @@ export const load: PageServerLoad = async ({ parent }) => {
 };
 
 export const actions: Actions = {
-  default: async ({ cookies, request, url }) => {
-    const formData = await request.formData();
-    const email = formData.get('email');
-    const password = formData.get('password');
+  signIn: async (event) => {
+    const { session, supabaseClient } = await getSupabase(event);
 
-    if (typeof email !== 'string' || !isEmailValid(email)) {
-      return invalid(400, { email, general: 'Email is invalid' });
+    if (session) {
+      throw redirect(303, ROUTES_ADMIN.base.href);
     }
 
-    if (typeof password !== 'string' || password.length === 0) {
-      return invalid(400, { email, general: 'Password is required' });
-    }
+    const formData = await event.request.formData();
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
 
-    let location: string = ROUTE_HREF.SIGNIN;
-
-    const { error, session } = await supabase.auth.signIn({
+    const { error } = await supabaseClient.auth.signInWithPassword({
       email,
       password,
     });
 
     if (error) {
-      return invalid(400, { email, general: error.message });
-    }
-
-    if (session) {
-      const BASE_URL =
-        process.env.NODE_ENV === 'production'
-          ? APP_URL
-          : `http://localhost:${url.port}`;
-
-      try {
-        const res = await fetch(`${BASE_URL}/api/auth/callback`, {
-          body: JSON.stringify({ event: 'SIGNED_IN', session }),
-          credentials: 'same-origin',
-          headers: new Headers({
-            accept: 'application/json',
-            'content-type': 'application/json',
-          }),
-          method: 'POST',
-        });
-
-        const cookieString = res.headers.get('set-cookie');
-
-        if (!cookieString) {
-          return invalid(400, { general: 'Error with cookies' });
-        }
-
-        const accessKey = 'sb-access-token';
-        const refreshKey = 'sb-refresh-token';
-        const index = cookieString.indexOf(refreshKey);
-
-        const accessToken = cookieString.substring(0, index - 2);
-        const refreshToken = cookieString.substring(index);
-        const parsedAccessToken = cookie.parse(accessToken);
-        const parsedRefreshToken = cookie.parse(refreshToken);
-        location = ROUTES_ADMIN.base.href;
-
-        cookies.set(accessKey, parsedAccessToken[accessKey], {
-          maxAge: parseInt(parsedAccessToken['Max-Age']),
-          path: parsedAccessToken.Path,
-          expires: new Date(parsedAccessToken.Expires),
-          httpOnly: true,
-          sameSite: 'lax',
-        });
-        cookies.set(refreshKey, parsedRefreshToken[refreshKey], {
-          maxAge: parseInt(parsedRefreshToken['Max-Age']),
-          path: parsedRefreshToken.Path,
-          expires: new Date(parsedRefreshToken.Expires),
-          httpOnly: true,
-          sameSite: 'lax',
-        });
-      } catch (err) {
-        const message =
-          err instanceof Error ? err.message : 'Something went wrong';
-        return invalid(400, { general: message });
+      if (error instanceof AuthApiError && error.status === 400) {
+        return fail(400, { email, error: 'Invalid credentials' });
       }
+
+      return fail(500, { email, error: 'Something went wrong' });
     }
 
-    throw redirect(303, location);
+    throw redirect(303, ROUTES_ADMIN.base.href);
+  },
+  signOut: async (event) => {
+    const { supabaseClient } = await getSupabase(event);
+    await supabaseClient.auth.signOut();
+    throw redirect(303, ROUTE_HREF.TOP_ALBUMS);
   },
 };

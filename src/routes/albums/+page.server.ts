@@ -1,18 +1,17 @@
-import { invalid } from '@sveltejs/kit';
-import { supabaseServerClient } from '@supabase/auth-helpers-sveltekit';
+import { getSupabase } from '@supabase/auth-helpers-sveltekit';
+import { fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-import type { Album } from '$lib/types';
-
-export const load: PageServerLoad = async ({ request }) => {
-  const { data: favorites, error } = await supabaseServerClient(request)
-    .from<Album>('albums')
+export const load: PageServerLoad = async (event) => {
+  const { supabaseClient } = await getSupabase(event);
+  const { data: favorites, error } = await supabaseClient
+    .from('albums')
     .select('*')
     .eq('favorite', true)
     .order('artist', { ascending: true });
 
   if (error) {
-    return invalid(500, { general: error.message });
+    return fail(500, { error: error.message });
   }
 
   return { favorites };

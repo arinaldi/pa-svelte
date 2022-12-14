@@ -1,5 +1,5 @@
-import { supabaseServerClient } from '@supabase/auth-helpers-sveltekit';
-import { invalid, redirect } from '@sveltejs/kit';
+import { getSupabase } from '@supabase/auth-helpers-sveltekit';
+import { fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 import { ROUTE_HREF, SORT_DIRECTION } from '$lib/constants';
@@ -9,10 +9,11 @@ import type { Album } from '$lib/types';
 
 const { ASC, DESC } = SORT_DIRECTION;
 
-export const load: PageServerLoad = async ({ parent, request, url }) => {
-  const { user } = await parent();
+export const load: PageServerLoad = async (event) => {
+  const { url } = event;
+  const { supabaseClient, session } = await getSupabase(event);
 
-  if (!user) {
+  if (!session?.user) {
     throw redirect(303, ROUTE_HREF.TOP_ALBUMS);
   }
 
@@ -27,7 +28,7 @@ export const load: PageServerLoad = async ({ parent, request, url }) => {
   const start = (page - 1) * perPage;
   const end = page * perPage - 1;
 
-  let query = supabaseServerClient(request)
+  let query = supabaseClient
     .from('albums')
     .select('*', { count: 'exact' })
     .ilike('artist', `%${artist}%`)
@@ -55,16 +56,16 @@ export const load: PageServerLoad = async ({ parent, request, url }) => {
   const { data: albums, count, error: albumsError } = await query;
 
   if (albumsError) {
-    return invalid(500, { general: albumsError.message });
+    return fail(500, { general: albumsError.message });
   }
 
-  const { count: cdCount, error: cdError } = await supabaseServerClient(request)
-    .from<Album>('albums')
+  const { count: cdCount, error: cdError } = await supabaseClient
+    .from('albums')
     .select('*', { count: 'exact', head: true })
     .eq('cd', true);
 
   if (cdError) {
-    return invalid(500, { general: cdError.message });
+    return fail(500, { general: cdError.message });
   }
 
   return {
