@@ -1,4 +1,5 @@
 import { getSupabase } from '@supabase/auth-helpers-sveltekit';
+import { fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async (event) => {
@@ -10,8 +11,7 @@ export const load: PageServerLoad = async (event) => {
     .order('artist', { ascending: true });
 
   if (error) {
-    // return invalid(500, { general: error.message });
-    console.log({ error });
+    return fail(500, { error: error.message });
   }
 
   return { favorites };
