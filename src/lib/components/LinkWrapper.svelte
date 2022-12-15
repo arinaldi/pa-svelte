@@ -3,7 +3,7 @@
 
   export let classNames = '';
   export let href: string;
-  export let closeMenu: any = null;
+  export let closeMenu: () => void = () => {};
 
   $: isActive = $page.url.pathname.startsWith(href);
 </script>
@@ -12,7 +12,7 @@
   class={`${
     isActive ? 'text-white' : 'text-gray-300'
   } ${classNames} rounded-md px-3 py-2 font-medium hover:bg-gray-700 hover:text-white dark:hover:bg-gray-800`}
-  data-sveltekit-prefetch
+  data-sveltekit-preload-data="hover"
   {href}
   on:click={closeMenu}
 >

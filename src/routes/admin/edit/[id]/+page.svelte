@@ -14,7 +14,7 @@
   <meta name="description" content="The best music on the net." />
 </svelte:head>
 
-<Layout>
+<Layout maxWidth="max-w-4xl">
   <span slot="title">
     {ROUTES_ADMIN.edit.label}
   </span>

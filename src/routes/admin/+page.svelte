@@ -109,7 +109,7 @@
     />
     <div class="mt-2 flex justify-between sm:mt-0 sm:ml-4">
       <div class="flex">
-        <SubmitButton />
+        <SubmitButton isSubmitting={false} />
         <span class="ml-1" />
         <Button onClick={onClear}>Clear</Button>
       </div>

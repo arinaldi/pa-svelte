@@ -3,7 +3,7 @@ import type { Actions, PageServerLoad } from './$types';
 import { getSupabase } from '@supabase/auth-helpers-sveltekit';
 import { AuthApiError } from '@supabase/supabase-js';
 
-import { ROUTE_HREF, ROUTES_ADMIN } from '$lib/constants';
+import { ROUTES_ADMIN } from '$lib/constants';
 
 export const load: PageServerLoad = async (event) => {
   const { session } = await getSupabase(event);
@@ -16,7 +16,7 @@ export const load: PageServerLoad = async (event) => {
 };
 
 export const actions: Actions = {
-  signIn: async (event) => {
+  default: async (event) => {
     const { session, supabaseClient } = await getSupabase(event);
 
     if (session) {
@@ -26,6 +26,14 @@ export const actions: Actions = {
     const formData = await event.request.formData();
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
+
+    if (!email) {
+      return fail(400, { error: 'Email is required' });
+    }
+
+    if (!password) {
+      return fail(400, { email, error: 'Password is required' });
+    }
 
     const { error } = await supabaseClient.auth.signInWithPassword({
       email,
@@ -41,10 +49,5 @@ export const actions: Actions = {
     }
 
     throw redirect(303, ROUTES_ADMIN.base.href);
-  },
-  signOut: async (event) => {
-    const { supabaseClient } = await getSupabase(event);
-    await supabaseClient.auth.signOut();
-    throw redirect(303, ROUTE_HREF.TOP_ALBUMS);
   },
 };

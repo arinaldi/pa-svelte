@@ -1,9 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import nProgress from 'nprogress';
-
   import { invalidate } from '$app/navigation';
   import { navigating } from '$app/stores';
+
   import Navbar from '$lib/components/Navbar.svelte';
   import { supabaseClient } from '$lib/db';
   import '../app.css';

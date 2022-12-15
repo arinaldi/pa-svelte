@@ -1,6 +1,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
+
   import { PAGE } from '$lib/constants';
 
   export let isDisabled: boolean;

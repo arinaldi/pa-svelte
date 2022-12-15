@@ -1,19 +1,36 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
+  import { applyAction, enhance, type SubmitFunction } from '$app/forms';
+  import { goto, invalidate } from '$app/navigation';
   import { page } from '$app/stores';
   import type { PageData } from './$types';
 
-  import CancelButton from '$lib/components/CancelButton.svelte';
+  import Button from '$lib/components/Button.svelte';
   import Layout from '$lib/components/Layout.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
   import { ROUTES_ADMIN } from '$lib/constants';
 
   export let data: PageData;
   $: ({ album } = data);
+  let isSubmitting = false;
 
-  function onCancel() {
+  function onBack() {
     goto(`${ROUTES_ADMIN.base.href}${$page.url.search}`);
   }
+
+  const onSubmit: SubmitFunction = () => {
+    isSubmitting = true;
+
+    return async ({ result }) => {
+      if (result.type === 'redirect') {
+        // do not invalidate, resource is deleted
+      } else {
+        await applyAction(result);
+      }
+
+      isSubmitting = false;
+      onBack();
+    };
+  };
 </script>
 
 <svelte:head>
@@ -21,22 +38,21 @@
   <meta name="description" content="The best music on the net." />
 </svelte:head>
 
-<Layout>
+<Layout maxWidth="max-w-4xl">
   <span slot="title">
     {ROUTES_ADMIN.delete.label}
   </span>
   <div class="relative flex-auto">
-    <div class="bg-white p-6 dark:bg-gray-800 dark:text-white">
+    <div class="bg-white dark:bg-gray-800 dark:text-white">
       Are you sure you want to delete {album.artist} – {album.title}?
     </div>
     <form
-      action={`/admin/delete/${album.id}${$page.url.search}&_method=delete`}
-      class="flex items-center justify-end p-6"
+      class="flex items-center mt-8 gap-2"
       method="post"
+      use:enhance={onSubmit}
     >
-      <CancelButton onClick={onCancel} />
-      <span class="ml-1" />
-      <SubmitButton />
+      <Button onClick={onBack}>Cancel</Button>
+      <SubmitButton {isSubmitting} />
     </form>
   </div>
 </Layout>

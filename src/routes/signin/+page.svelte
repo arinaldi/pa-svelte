@@ -1,5 +1,7 @@
 <script lang="ts">
   import type { ActionData } from './$types';
+  import { applyAction, enhance, type SubmitFunction } from '$app/forms';
+  import { invalidate } from '$app/navigation';
 
   import Input from '$lib/components/Input.svelte';
   import Layout from '$lib/components/Layout.svelte';
@@ -7,6 +9,21 @@
   import SubmitButton from '$lib/components/SubmitButton.svelte';
 
   export let form: ActionData;
+  let isSubmitting = false;
+
+  const onSubmit: SubmitFunction = () => {
+    isSubmitting = true;
+
+    return async ({ result }) => {
+      if (result.type === 'redirect') {
+        await invalidate('supabase:auth');
+      } else {
+        await applyAction(result);
+      }
+
+      isSubmitting = false;
+    };
+  };
 </script>
 
 <svelte:head>
@@ -16,7 +33,7 @@
 
 <Layout maxWidth="max-w-sm">
   <span slot="title">Sign In</span>
-  <form action="?/signIn" method="post">
+  <form method="post" use:enhance={onSubmit}>
     <div class="bg-white dark:bg-gray-800">
       <div class="grid grid-cols-6 gap-6">
         <div class="col-span-6">
@@ -32,7 +49,7 @@
       </div>
     </div>
     <div class="mt-4 flex items-center justify-end">
-      <SubmitButton />
+      <SubmitButton {isSubmitting} />
     </div>
     {#if form?.error}
       <div class="mt-4 text-red-600 text-center">{form.error}</div>

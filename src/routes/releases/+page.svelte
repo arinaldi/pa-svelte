@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { applyAction, type SubmitFunction } from '$app/forms';
+  import { invalidate } from '$app/navigation';
   import { page } from '$app/stores';
   import type { PageData } from './$types';
 
@@ -18,6 +20,7 @@
   let artist = '';
   let title = '';
   let date = '';
+  let isSubmitting = false;
 
   function onClose() {
     artist = '';
@@ -25,6 +28,21 @@
     date = '';
     modal = { data: null, type: null };
   }
+
+  const onSubmit: SubmitFunction = () => {
+    isSubmitting = true;
+
+    return async ({ result }) => {
+      if (result.type === 'redirect') {
+        await invalidate('supabase:auth');
+      } else {
+        await applyAction(result);
+      }
+
+      isSubmitting = false;
+      onClose();
+    };
+  };
 </script>
 
 <svelte:head>
@@ -85,7 +103,7 @@
   </div>
 
   {#if modal.type === MODAL_TYPES.CREATE}
-    <Modal action="?/createRelease" {onClose}>
+    <Modal action="?/createRelease" {isSubmitting} {onClose} {onSubmit}>
       <span slot="title">Create Release</span>
       <div class="w-full" slot="body">
         <Input
@@ -106,7 +124,7 @@
       </div>
     </Modal>
   {:else if modal.type === MODAL_TYPES.EDIT && modal.data}
-    <Modal action="?/editRelease" {onClose}>
+    <Modal action="?/editRelease" {isSubmitting} {onClose} {onSubmit}>
       <span slot="title">Edit Release</span>
       <div class="w-full" slot="body">
         <input name="id" type="hidden" value={modal.data.id} />
@@ -128,7 +146,7 @@
       </div>
     </Modal>
   {:else if modal.type === MODAL_TYPES.DELETE && modal.data}
-    <Modal action="?/deleteRelease" {onClose}>
+    <Modal action="?/deleteRelease" {isSubmitting} {onClose} {onSubmit}>
       <span slot="title">Delete Release</span>
       <div slot="body">
         <input name="id" type="hidden" value={modal.data.id} />

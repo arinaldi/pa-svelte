@@ -23,7 +23,7 @@ export const actions: Actions = {
     const { supabaseClient, session } = await getSupabase(event);
 
     if (!session) {
-      return fail(404, { general: 'Not authorized' });
+      return fail(401, { general: 'Not authorized' });
     }
 
     const formData = await event.request.formData();
@@ -57,7 +57,7 @@ export const actions: Actions = {
     const { supabaseClient, session } = await getSupabase(event);
 
     if (!session) {
-      return fail(404, { error: 'Not authorized' });
+      return fail(401, { error: 'Not authorized' });
     }
 
     const formData = await event.request.formData();

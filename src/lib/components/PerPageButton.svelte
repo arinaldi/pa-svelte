@@ -1,6 +1,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import { page } from '$app/stores';
+
   import { PER_PAGE } from '$lib/constants';
   import { parsePerPageQuery } from '$lib/utils';
 

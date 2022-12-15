@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from '$app/stores';
+
   import { ROUTE_HREF, ROUTES, ROUTES_ADMIN, THEME } from '$lib/constants';
   import LinkWrapper from '$lib/components/LinkWrapper.svelte';
   import ArrowLeftOnRectangleIcon from '$lib/icons/ArrowLeftOnRectangleIcon.svelte';
@@ -88,7 +89,7 @@
           class="absolute inset-y-0 right-0 hidden pr-2 sm:static sm:inset-auto sm:ml-0 sm:flex sm:items-center sm:pr-0"
         >
           {#if $page.data.session}
-            <form action="/signin?/signOut" method="post">
+            <form action="/signout" method="post">
               <button
                 class="text-md cursor-pointer rounded-md px-3 py-2 font-medium text-gray-300 hover:bg-gray-700 hover:text-white dark:hover:bg-gray-800"
                 type="submit"
@@ -126,7 +127,7 @@
             >
               {ROUTES_ADMIN.base.label}
             </LinkWrapper>
-            <form action="/signin?/signOut" method="post">
+            <form action="/signout" method="post">
               <button
                 class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                 href="/api/auth/logout"

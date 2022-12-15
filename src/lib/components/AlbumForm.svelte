@@ -1,7 +1,9 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
+  import { applyAction, enhance, type SubmitFunction } from '$app/forms';
+  import { goto, invalidate } from '$app/navigation';
   import { page } from '$app/stores';
-  import CancelButton from '$lib/components/CancelButton.svelte';
+
+  import Button from '$lib/components/Button.svelte';
   import Checkbox from '$lib/components/Checkbox.svelte';
   import Input from '$lib/components/Input.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
@@ -10,14 +12,30 @@
   import type { AlbumInput } from '$lib/types';
 
   export let album: AlbumInput;
+  let isSubmitting = false;
 
-  function onCancel() {
+  function onBack() {
     goto(`${ROUTES_ADMIN.base.href}${$page.url.search}`);
   }
+
+  const onSubmit: SubmitFunction = () => {
+    isSubmitting = true;
+
+    return async ({ result }) => {
+      if (result.type === 'redirect') {
+        await invalidate('supabase:auth');
+      } else {
+        await applyAction(result);
+      }
+
+      isSubmitting = false;
+      onBack();
+    };
+  };
 </script>
 
-<form method="post">
-  <div class="bg-white p-6 dark:bg-gray-800">
+<form method="post" use:enhance={onSubmit}>
+  <div class="bg-white dark:bg-gray-800">
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
       <Input
         bind:value={album.artist}
@@ -60,9 +78,8 @@
       />
     </div>
   </div>
-  <div class="flex items-center justify-end p-6">
-    <CancelButton onClick={onCancel} />
-    <span class="ml-1" />
-    <SubmitButton />
+  <div class="flex items-center mt-8 gap-2">
+    <Button onClick={onBack}>Cancel</Button>
+    <SubmitButton {isSubmitting} />
   </div>
 </form>

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { page } from '$app/stores';
+
   import PaginationButton from '$lib/components/PaginationButton.svelte';
   import { PAGE } from '$lib/constants';
   import { parsePageQuery } from '$lib/utils';
