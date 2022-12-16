@@ -1,7 +1,6 @@
 <script lang="ts">
   import toast from 'svelte-french-toast';
   import { applyAction, type SubmitFunction } from '$app/forms';
-  import { invalidate } from '$app/navigation';
   import { page } from '$app/stores';
   import type { PageData } from './$types';
 
@@ -36,16 +35,27 @@
       suffix = 'deleted';
     }
 
-    return async ({ result }) => {
-      if (result.type === 'redirect') {
-        await invalidate('supabase:auth');
-      } else {
-        await applyAction(result);
+    return async ({ result, update }) => {
+      switch (result.type) {
+        case 'success': {
+          onClose();
+          toast.success(`${MESSAGES.SONG_PREFIX} ${suffix}`);
+          await update();
+          break;
+        }
+        case 'error': {
+          toast.error(result.error?.message ?? MESSAGES.ERROR);
+          break;
+        }
+        case 'failure': {
+          toast.error(result.data?.error ?? MESSAGES.ERROR);
+          break;
+        }
+        default:
+          await applyAction(result);
       }
 
       isSubmitting = false;
-      onClose();
-      toast.success(`${MESSAGES.SONG_PREFIX} ${suffix}`);
     };
   };
 </script>

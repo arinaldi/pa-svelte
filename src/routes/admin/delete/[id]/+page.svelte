@@ -23,15 +23,25 @@
     isSubmitting = true;
 
     return async ({ result }) => {
-      if (result.type === 'redirect') {
-        // do not invalidate, resource is deleted
-      } else {
-        await applyAction(result);
+      switch (result.type) {
+        case 'redirect': {
+          onBack();
+          toast.success(`${MESSAGES.ALBUM_PREFIX} deleted`);
+          break;
+        }
+        case 'error': {
+          toast.error(result.error?.message ?? MESSAGES.ERROR);
+          break;
+        }
+        case 'failure': {
+          toast.error(result.data?.error ?? MESSAGES.ERROR);
+          break;
+        }
+        default:
+          await applyAction(result);
       }
 
       isSubmitting = false;
-      onBack();
-      toast.success(`${MESSAGES.ALBUM_PREFIX} deleted`);
     };
   };
 </script>

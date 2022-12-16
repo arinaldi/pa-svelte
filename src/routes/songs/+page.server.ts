@@ -1,8 +1,7 @@
 import { getSupabase } from '@supabase/auth-helpers-sveltekit';
-import { type Actions, fail, redirect } from '@sveltejs/kit';
+import { type Actions, fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-import { ROUTE_HREF } from '$lib/constants';
 import type { Song } from '$lib/types';
 
 export const load: PageServerLoad = async (event) => {
@@ -53,7 +52,7 @@ export const actions: Actions = {
       return fail(500, { general: error.message });
     }
 
-    throw redirect(303, ROUTE_HREF.FEATURED_SONGS);
+    return { success: true };
   },
   deleteSong: async (event) => {
     const { supabaseClient, session } = await getSupabase(event);
@@ -75,6 +74,6 @@ export const actions: Actions = {
       return fail(500, { general: error.message });
     }
 
-    throw redirect(303, ROUTE_HREF.FEATURED_SONGS);
+    return { success: true };
   },
 };

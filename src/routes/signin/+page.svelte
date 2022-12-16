@@ -1,12 +1,14 @@
 <script lang="ts">
-  import type { ActionData } from './$types';
+  import toast from 'svelte-french-toast';
   import { applyAction, enhance, type SubmitFunction } from '$app/forms';
   import { invalidate } from '$app/navigation';
+  import type { ActionData } from './$types';
 
   import Input from '$lib/components/Input.svelte';
   import Layout from '$lib/components/Layout.svelte';
   import PasswordInput from '$lib/components/PasswordInput.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
+  import { MESSAGES } from '$lib/constants';
 
   interface Form {
     email?: string;
@@ -19,10 +21,21 @@
     isSubmitting = true;
 
     return async ({ result }) => {
-      if (result.type === 'redirect') {
-        await invalidate('supabase:auth');
-      } else {
-        await applyAction(result);
+      switch (result.type) {
+        case 'redirect': {
+          await invalidate('supabase:auth');
+          break;
+        }
+        case 'error': {
+          toast.error(result.error?.message ?? MESSAGES.ERROR);
+          break;
+        }
+        case 'failure': {
+          toast.error(result.data?.error ?? MESSAGES.ERROR);
+          break;
+        }
+        default:
+          await applyAction(result);
       }
 
       isSubmitting = false;
@@ -55,8 +68,5 @@
     <div class="mt-4 flex items-center justify-end">
       <SubmitButton {isSubmitting} />
     </div>
-    {#if form?.error}
-      <div class="mt-4 text-center text-red-600">{form.error}</div>
-    {/if}
   </form>
 </Layout>

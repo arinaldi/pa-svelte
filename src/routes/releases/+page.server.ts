@@ -1,8 +1,6 @@
 import { getSupabase } from '@supabase/auth-helpers-sveltekit';
-import { type Actions, fail, redirect } from '@sveltejs/kit';
+import { type Actions, fail } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-
-import { ROUTE_HREF } from '$lib/constants';
 import type { Release } from '$lib/types';
 
 export const load: PageServerLoad = async (event) => {
@@ -53,7 +51,7 @@ export const actions: Actions = {
       return fail(500, { error: error.message });
     }
 
-    throw redirect(303, ROUTE_HREF.NEW_RELEASES);
+    return { success: true };
   },
   editRelease: async (event) => {
     const { supabaseClient, session } = await getSupabase(event);
@@ -93,7 +91,7 @@ export const actions: Actions = {
       return fail(500, { error: error.message });
     }
 
-    throw redirect(303, ROUTE_HREF.NEW_RELEASES);
+    return { success: true };
   },
   deleteRelease: async (event) => {
     const { supabaseClient, session } = await getSupabase(event);
@@ -118,6 +116,6 @@ export const actions: Actions = {
       return fail(500, { error: error.message });
     }
 
-    throw redirect(303, ROUTE_HREF.NEW_RELEASES);
+    return { success: true };
   },
 };
