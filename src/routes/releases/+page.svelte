@@ -1,4 +1,5 @@
 <script lang="ts">
+  import toast from 'svelte-french-toast';
   import { applyAction, type SubmitFunction } from '$app/forms';
   import { invalidate } from '$app/navigation';
   import { page } from '$app/stores';
@@ -7,7 +8,7 @@
   import Input from '$lib/components/Input.svelte';
   import Layout from '$lib/components/Layout.svelte';
   import Modal from '$lib/components/Modal.svelte';
-  import { MODAL_TYPES } from '$lib/constants';
+  import { MESSAGES, MODAL_TYPES } from '$lib/constants';
   import DocumentPlusIcon from '$lib/icons/DocumentPlusIcon.svelte';
   import PencilIcon from '$lib/icons/PencilIcon.svelte';
   import TrashIcon from '$lib/icons/TrashIcon.svelte';
@@ -29,8 +30,15 @@
     modal = { data: null, type: null };
   }
 
-  const onSubmit: SubmitFunction = () => {
+  const onSubmit: SubmitFunction = ({ action }) => {
+    let suffix = 'created';
     isSubmitting = true;
+
+    if (action.search.includes('edit')) {
+      suffix = 'edited';
+    } else if (action.search.includes('delete')) {
+      suffix = 'deleted';
+    }
 
     return async ({ result }) => {
       if (result.type === 'redirect') {
@@ -41,6 +49,7 @@
 
       isSubmitting = false;
       onClose();
+      toast.success(`${MESSAGES.RELEASE_PREFIX} ${suffix}`);
     };
   };
 </script>

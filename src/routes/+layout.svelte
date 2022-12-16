@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import nProgress from 'nprogress';
+  import { Toaster } from 'svelte-french-toast';
   import { invalidate } from '$app/navigation';
   import { navigating } from '$app/stores';
 
@@ -49,6 +50,7 @@
   </script>
 </svelte:head>
 
+<Toaster />
 <main>
   <Navbar />
   <slot />

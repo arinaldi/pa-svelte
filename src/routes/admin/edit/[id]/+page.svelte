@@ -4,9 +4,10 @@
   import AlbumForm from '$lib/components/AlbumForm.svelte';
   import Layout from '$lib/components/Layout.svelte';
   import { ROUTES_ADMIN } from '$lib/constants';
+  import type { AlbumInput } from '$lib/types';
 
   export let data: PageData;
-  $: ({ album } = data);
+  $: album = data.album as AlbumInput;
 </script>
 
 <svelte:head>

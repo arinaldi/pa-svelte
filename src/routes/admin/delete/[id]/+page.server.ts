@@ -3,6 +3,7 @@ import { type Actions, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 import { ROUTES_ADMIN, ROUTE_HREF } from '$lib/constants';
+import type { Album } from '$lib/types';
 
 export const load: PageServerLoad = async (event) => {
   const { session, supabaseClient } = await getSupabase(event);
@@ -11,11 +12,12 @@ export const load: PageServerLoad = async (event) => {
     throw redirect(303, ROUTE_HREF.TOP_ALBUMS);
   }
 
-  const { data: album, error } = await supabaseClient
+  const { data, error } = await supabaseClient
     .from('albums')
     .select('*')
     .eq('id', event.params.id)
     .single();
+  const album: Album = data;
 
   if (error) {
     return fail(500, { error: error.message });

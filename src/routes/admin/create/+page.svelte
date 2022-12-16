@@ -2,8 +2,9 @@
   import AlbumForm from '$lib/components/AlbumForm.svelte';
   import Layout from '$lib/components/Layout.svelte';
   import { ROUTES_ADMIN } from '$lib/constants';
+  import type { AlbumInput } from '$lib/types';
 
-  const album = {
+  const album: AlbumInput = {
     artist: '',
     title: '',
     year: new Date().getFullYear().toString(),

@@ -1,16 +1,18 @@
 <script lang="ts">
+  import toast from 'svelte-french-toast';
   import { applyAction, enhance, type SubmitFunction } from '$app/forms';
-  import { goto, invalidate } from '$app/navigation';
+  import { goto } from '$app/navigation';
   import { page } from '$app/stores';
   import type { PageData } from './$types';
 
   import Button from '$lib/components/Button.svelte';
   import Layout from '$lib/components/Layout.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
-  import { ROUTES_ADMIN } from '$lib/constants';
+  import { MESSAGES, ROUTES_ADMIN } from '$lib/constants';
+  import type { Album } from '$lib/types';
 
   export let data: PageData;
-  $: ({ album } = data);
+  $: album = data.album as Album;
   let isSubmitting = false;
 
   function onBack() {
@@ -29,6 +31,7 @@
 
       isSubmitting = false;
       onBack();
+      toast.success(`${MESSAGES.ALBUM_PREFIX} deleted`);
     };
   };
 </script>

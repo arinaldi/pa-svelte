@@ -1,4 +1,5 @@
 <script lang="ts">
+  import toast from 'svelte-french-toast';
   import { applyAction, enhance, type SubmitFunction } from '$app/forms';
   import { goto, invalidate } from '$app/navigation';
   import { page } from '$app/stores';
@@ -7,19 +8,24 @@
   import Checkbox from '$lib/components/Checkbox.svelte';
   import Input from '$lib/components/Input.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
-  import { ROUTES_ADMIN } from '$lib/constants';
+  import { MESSAGES, ROUTES_ADMIN } from '$lib/constants';
 
-  import type { Album } from '$lib/types';
+  import type { AlbumInput } from '$lib/types';
 
-  export let album: Album;
+  export let album: AlbumInput;
   let isSubmitting = false;
 
   function onBack() {
     goto(`${ROUTES_ADMIN.base.href}${$page.url.search}`);
   }
 
-  const onSubmit: SubmitFunction = () => {
+  const onSubmit: SubmitFunction = ({ action }) => {
+    let suffix = 'created';
     isSubmitting = true;
+
+    if (action.pathname.includes('edit')) {
+      suffix = 'edited';
+    }
 
     return async ({ result }) => {
       if (result.type === 'redirect') {
@@ -30,6 +36,7 @@
 
       isSubmitting = false;
       onBack();
+      toast.success(`${MESSAGES.ALBUM_PREFIX} ${suffix}`);
     };
   };
 </script>

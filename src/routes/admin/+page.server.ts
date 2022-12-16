@@ -3,7 +3,6 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 import { ROUTE_HREF, SORT_DIRECTION } from '$lib/constants';
-
 import { parsePageQuery, parsePerPageQuery, parseQuery } from '$lib/utils';
 import type { Album } from '$lib/types';
 
@@ -53,7 +52,8 @@ export const load: PageServerLoad = async (event) => {
     query = query.order('artist', { ascending: direction === ASC });
   }
 
-  const { data: albums, count, error: albumsError } = await query;
+  const { data, count, error: albumsError } = await query;
+  const albums: Album[] = data ?? [];
 
   if (albumsError) {
     return fail(500, { general: albumsError.message });
@@ -69,7 +69,7 @@ export const load: PageServerLoad = async (event) => {
   }
 
   return {
-    albums: albums as Album[],
+    albums,
     cdTotal: cdCount,
     total: count,
   };
