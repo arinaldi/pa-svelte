@@ -47,7 +47,7 @@
       Are you sure you want to delete {album.artist} – {album.title}?
     </div>
     <form
-      class="flex items-center mt-8 gap-2"
+      class="mt-8 flex items-center gap-2"
       method="post"
       use:enhance={onSubmit}
     >

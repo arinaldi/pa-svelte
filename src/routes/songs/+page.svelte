@@ -13,7 +13,7 @@
   import type { ModalType } from '$lib/types';
 
   export let data: PageData;
-  $: ({ songs } = data);
+  $: songs = data.songs ?? [];
   let modal: ModalType = { data: null, type: null };
   let artist = '';
   let title = '';
@@ -52,16 +52,17 @@
   <span slot="title">Featured Songs</span>
   <span slot="titleAction">
     {#if $page.data.session}
-      <span
-        class="rounded-md px-1 py-1.5 hover:bg-gray-100"
+      <button
+        class="rounded-md px-1 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-900"
         on:click={() => {
           modal = { data: null, type: MODAL_TYPES.CREATE };
         }}
+        type="button"
       >
         <DocumentPlusIcon
           className="inline h-6 w-6 cursor-pointer dark:text-white"
         />
-      </span>
+      </button>
     {/if}
   </span>
   <div
@@ -87,14 +88,15 @@
             Listen
           </a>
           {#if $page.data.session}
-            <span
-              class="ml-2 p-1 hover:bg-gray-100 rounded-md cursor-pointer dark:text-white"
+            <button
+              class="ml-2 cursor-pointer rounded-md p-1 hover:bg-gray-100 dark:text-white"
               on:click={() => {
                 modal = { data: song, type: MODAL_TYPES.DELETE };
               }}
+              type="button"
             >
               <TrashIcon className="inline h-4 w-4" />
-            </span>
+            </button>
           {/if}
         </div>
       </div>

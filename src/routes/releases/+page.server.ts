@@ -3,13 +3,15 @@ import { type Actions, fail, redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
 import { ROUTE_HREF } from '$lib/constants';
+import type { Release } from '$lib/types';
 
 export const load: PageServerLoad = async (event) => {
   const { supabaseClient, session } = await getSupabase(event);
-  const { data: releases, error } = await supabaseClient
+  const { data, error } = await supabaseClient
     .from('releases')
     .select('*')
     .order('artist', { ascending: true });
+  const releases: Release[] = data ?? [];
 
   if (error) {
     return fail(500, { general: error.message });

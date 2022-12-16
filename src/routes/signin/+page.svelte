@@ -8,7 +8,11 @@
   import PasswordInput from '$lib/components/PasswordInput.svelte';
   import SubmitButton from '$lib/components/SubmitButton.svelte';
 
-  export let form: ActionData;
+  interface Form {
+    email?: string;
+  }
+
+  export let form: ActionData & Form;
   let isSubmitting = false;
 
   const onSubmit: SubmitFunction = () => {
@@ -52,7 +56,7 @@
       <SubmitButton {isSubmitting} />
     </div>
     {#if form?.error}
-      <div class="mt-4 text-red-600 text-center">{form.error}</div>
+      <div class="mt-4 text-center text-red-600">{form.error}</div>
     {/if}
   </form>
 </Layout>

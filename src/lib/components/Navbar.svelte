@@ -76,7 +76,7 @@
         </div>
         <button
           aria-expanded="false"
-          class="rounded-md p-2 text-gray-300 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+          class="mr-2 rounded-md px-1 py-1.5 text-gray-300 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white dark:hover:bg-gray-900"
           on:click={toggleDarkMode}
           type="button"
         >
@@ -91,7 +91,7 @@
           {#if $page.data.session}
             <form action="/signout" method="post">
               <button
-                class="text-md cursor-pointer rounded-md px-3 py-2 font-medium text-gray-300 hover:bg-gray-700 hover:text-white dark:hover:bg-gray-800"
+                class="text-md cursor-pointer rounded-md px-1 py-1.5 font-medium text-gray-300 hover:bg-gray-700 hover:text-white dark:hover:bg-gray-800"
                 type="submit"
               >
                 <ArrowRightOnRectangleIcon className="h-5 w-5" />

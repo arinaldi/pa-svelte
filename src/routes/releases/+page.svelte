@@ -15,7 +15,7 @@
   import type { ModalType } from '$lib/types';
 
   export let data: PageData;
-  $: ({ releases } = data);
+  $: releases = data.releases ?? [];
   let modal: ModalType = { data: null, type: null };
   let artist = '';
   let title = '';
@@ -54,16 +54,17 @@
   <span slot="title">New Releases</span>
   <span slot="titleAction">
     {#if $page.data.session}
-      <span
-        class="rounded-md px-1 py-1.5 hover:bg-gray-100"
+      <button
+        class="rounded-md px-1 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-900"
         on:click={() => {
           modal = { data: null, type: MODAL_TYPES.CREATE };
         }}
+        type="button"
       >
         <DocumentPlusIcon
           className="inline h-6 w-6 cursor-pointer dark:text-white"
         />
-      </span>
+      </button>
     {/if}
   </span>
   <div class="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
@@ -75,25 +76,27 @@
             <li class="dark:text-white">
               <span>{item.artist} &ndash; {item.title}</span>
               {#if $page.data.session}
-                <span
-                  class="ml-1 p-1 hover:bg-gray-100 rounded-md cursor-pointer dark:text-white"
+                <button
+                  class="ml-1 cursor-pointer rounded-md p-1 hover:bg-gray-100 dark:text-white"
                   on:click={() => {
                     artist = item.artist;
                     title = item.title;
                     date = formatDate(item.date || '');
                     modal = { data: item, type: MODAL_TYPES.EDIT };
                   }}
+                  type="button"
                 >
                   <PencilIcon className="inline h-4 w-4" />
-                </span>
-                <span
-                  class="p-1 hover:bg-gray-100 rounded-md cursor-pointer dark:text-white"
+                </button>
+                <button
+                  class="cursor-pointer rounded-md p-1 hover:bg-gray-100 dark:text-white"
                   on:click={() => {
                     modal = { data: item, type: MODAL_TYPES.DELETE };
                   }}
+                  type="button"
                 >
                   <TrashIcon className="inline h-4 w-4" />
-                </span>
+                </button>
               {/if}
             </li>
           {/each}

@@ -79,7 +79,7 @@
     </span>
     <span class="mr-3">CDs</span>
     <a
-      class="rounded-md px-1 py-1.5 hover:bg-gray-200"
+      class="rounded-md px-1 py-1.5 hover:bg-gray-200 dark:hover:bg-gray-900"
       href={`${ROUTES_ADMIN.create.href}${$page.url.search}`}
     >
       <DocumentPlusIcon

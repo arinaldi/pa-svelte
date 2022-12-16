@@ -33,11 +33,11 @@
   }
 </script>
 
-<th
-  class={`cursor-pointer px-3 py-3 text-left text-xs font-extrabold uppercase tracking-wider text-gray-700 dark:text-white ${wrapperClassName}`}
-  scope="col"
->
-  <div on:click={onClick}>
+<th class={`px-3 py-3 text-left ${wrapperClassName}`} scope="col">
+  <button
+    class="text-xs font-extrabold uppercase tracking-wider text-gray-700 dark:text-white"
+    on:click={onClick}
+  >
     <slot />
     <span
       class={`${
@@ -50,5 +50,5 @@
         className={`${desc ? 'rotate-180' : ''} inline h-4 w-4`}
       />
     </span>
-  </div>
+  </button>
 </th>

@@ -9,9 +9,9 @@
   import SubmitButton from '$lib/components/SubmitButton.svelte';
   import { ROUTES_ADMIN } from '$lib/constants';
 
-  import type { AlbumInput } from '$lib/types';
+  import type { Album } from '$lib/types';
 
-  export let album: AlbumInput;
+  export let album: Album;
   let isSubmitting = false;
 
   function onBack() {
@@ -78,7 +78,7 @@
       />
     </div>
   </div>
-  <div class="flex items-center mt-8 gap-2">
+  <div class="mt-8 flex items-center gap-2">
     <Button onClick={onBack}>Cancel</Button>
     <SubmitButton {isSubmitting} />
   </div>

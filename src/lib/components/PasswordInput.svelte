@@ -34,16 +34,17 @@
       type={showPassword ? 'text' : 'password'}
       {value}
     />
-    <div
+    <button
       aria-label="Show or hide password"
-      class="absolute inset-y-0 right-0 flex cursor-pointer items-center pr-3 dark:text-white"
+      class="absolute inset-y-0 right-0 mr-3 flex cursor-pointer items-center dark:text-white"
       on:click={toggleShowPassword}
+      type="button"
     >
       {#if showPassword}
         <EyeIcon className="h-5 w-5" />
       {:else}
         <EyeSlashIcon className="h-5 w-5" />
       {/if}
-    </div>
+    </button>
   </div>
 </div>
