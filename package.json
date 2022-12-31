@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@supabase/auth-helpers-sveltekit": "^0.8.6",
-    "@supabase/supabase-js": "^2.2.0"
+    "@supabase/supabase-js": "^2.2.3"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^1.0.0",
